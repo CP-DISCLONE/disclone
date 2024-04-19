@@ -82,7 +82,7 @@ DATABASES = {
         'NAME': 'disclone_db',
         'USER': 'postgres',
         'PASSWORD': 'postgres',
-        'HOST': 'db' if env.get("DB_HOST") else "localhost",
+        'HOST': 'db',
         'PORT': '5432',
     }
 }
