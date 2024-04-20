@@ -111,7 +111,7 @@ CHANNEL_LAYERS = {
 CELERY_BROKER_URL = "redis://localhost:6379/0"
 CELERY_RESULT_BACKEND = "redis://localhost:6379/0"
 
-ASGI_APPLICATION = 'project.routing.application'
+ASGI_APPLICATION = 'disclone_proj.routing.application'
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
