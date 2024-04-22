@@ -1,6 +1,23 @@
 import { Link } from "react-router-dom";
+import { FormEvent, useState } from "react";
 
 const SignupPage = () => {
+    const [inputName, setInputName] = useState('')
+    const [inputEmail, setInputEmail] = useState('')
+    const [inputPassword, setInputPassword] = useState('')
+
+    const handleSignup = (e: FormEvent) => {
+        e.preventDefault()
+        console.log(inputName)
+        console.log(inputEmail)
+        console.log(inputPassword)
+
+        // reset form inputs
+        setInputName('')
+        setInputEmail('')
+        setInputPassword('')
+    }
+
     return (
         <>
             <section className="px-[5%]">
@@ -23,7 +40,7 @@ const SignupPage = () => {
                             </h1>
                             <p className="md:text-md">Lorem ipsum dolor sit amet adipiscing elit.</p>
                         </div>
-                        <form className="grid grid-cols-1 gap-6">
+                        <form onSubmit={(e) => { handleSignup(e) }} className="grid grid-cols-1 gap-6">
                             <div className="grid w-full items-center">
                                 <label
                                     className="mb-2 peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -34,7 +51,8 @@ const SignupPage = () => {
                                     type="text"
                                     className="flex size-full min-h-11 border border-border-primary bg-background-primary px-3 py-2 align-middle file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-neutral focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                                     id="name"
-                                    value=""
+                                    value={inputName}
+                                    onChange={(e) => { setInputName(e.target.value) }}
                                 />
                             </div>
                             <div className="grid w-full items-center">
@@ -47,7 +65,8 @@ const SignupPage = () => {
                                     type="text"
                                     className="flex size-full min-h-11 border border-border-primary bg-background-primary px-3 py-2 align-middle file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-neutral focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                                     id="email"
-                                    value=""
+                                    value={inputEmail}
+                                    onChange={(e) => { setInputEmail(e.target.value) }}
                                 />
                             </div>
                             <div className="grid w-full items-center">
@@ -60,11 +79,12 @@ const SignupPage = () => {
                                     type="password"
                                     className="flex size-full min-h-11 border border-border-primary bg-background-primary px-3 py-2 align-middle file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-neutral focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                                     id="password"
-                                    value=""
+                                    value={inputPassword}
+                                    onChange={(e) => { setInputPassword(e.target.value) }}
                                 />
                             </div>
                             <div className="grid-col-1 grid gap-4">
-                                <button className="inline-flex items-center justify-center gap-3 whitespace-nowrap border border-border-primary bg-background-alternative px-6 py-3 text-text-alternative ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-primary focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50">
+                                <button className="inline-flex items-center justify-center gap-3 whitespace-nowrap border border-border-primary bg-background-alternative hover:bg-black hover:text-white px-6 py-3 text-text-alternative ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-primary focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50">
                                     Sign up
                                 </button>
                             </div>
