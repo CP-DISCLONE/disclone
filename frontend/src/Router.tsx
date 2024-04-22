@@ -4,24 +4,29 @@ import { Children } from "react";
 import LandingPage from "./pages/LandingPage"
 import NotFoundPage from "./pages/NotFoundPage"
 import ErrorPage from "./pages/ErrorPage"
+import SignupPage from "./pages/SignupPage";
 
 const Router = createBrowserRouter([
     {
         path: "/",
         element: <App />,
-        children:[
+        children: [
             {
                 index: true,
                 element: <LandingPage />
             },
-            
+
             {
-                path:"*",
+                path: "*",
                 element: <NotFoundPage />
+            },
+            {
+                path: "signup/",
+                element: <SignupPage />
             }
         ],
         errorElement: <ErrorPage />
     },
-    ]); 
-    
-    export default Router;
+]);
+
+export default Router;
