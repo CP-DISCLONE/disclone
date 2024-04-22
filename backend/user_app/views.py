@@ -66,7 +66,7 @@ class Sign_up(APIView):
 
 
 class Log_in(APIView):
-    def post(self, request):
+    def post(self, request) -> Response:
         data = request.data.copy()
         user = authenticate(username=data.get("email"), password=data.get("password"))
         if user:
@@ -84,5 +84,9 @@ class Log_in(APIView):
             return _response
         return Response("No user matching these credentials", status=HTTP_404_NOT_FOUND)
 
-
-
+class Log_out(APIView):
+    def post(self, request):
+        request.user.auth_token.delete()
+        logout(request)
+        _response = Response(status=HTTP_204_NO_CONTENT)
+        return _response
