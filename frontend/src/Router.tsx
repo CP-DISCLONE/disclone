@@ -5,6 +5,7 @@ import LandingPage from "./pages/LandingPage"
 import NotFoundPage from "./pages/NotFoundPage"
 import ErrorPage from "./pages/ErrorPage"
 import SignupPage from "./pages/SignupPage";
+import ChatRoom from "./pages/ChatRoom";
 
 const Router = createBrowserRouter([
     {
@@ -14,6 +15,10 @@ const Router = createBrowserRouter([
             {
                 index: true,
                 element: <LandingPage />
+            },
+            {
+                path: "chatroom/",
+                element: <ChatRoom />
             },
 
             {
