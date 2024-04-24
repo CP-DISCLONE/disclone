@@ -46,8 +46,6 @@ services:
       - PYTHONPATH=/disclone/backend
     ports:
       - '8000:8000'
-    volumes:
-      - ./backend:/disclone/backend
     depends_on:
       - db
       - redis
