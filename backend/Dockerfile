@@ -7,13 +7,12 @@ RUN apt-get update && apt-get install -y postgresql-client
 
 WORKDIR /disclone/backend
 
-COPY requirements.txt /disclone/backend/
-
-RUN pip install -r requirements.txt
-
 COPY . /disclone/backend/
 
-RUN chmod +x wait-for-postgres.sh
+RUN python3 -m venv .venv
 
-CMD "./wait-for-postgres.sh" "db"
-# CMD gunicorn --bind 0.0.0.0:8000 --workers 3 disclone_proj.wsgi:application
+ENV VIRTUAL_ENV=/disclone/backend/.venv
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+# RUN pip install -r requirements.txt
+RUN /disclone/backend/.venv/bin/pip install --no-cache-dir -r requirements.txt
