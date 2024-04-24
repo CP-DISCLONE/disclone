@@ -18,15 +18,7 @@ const LandingPage = () => {
 		<>
 			<section className="px-[5%]">
 				<div className="relative flex min-h-svh flex-col justify-center items-stretch overflow-auto py-24 lg:py-20">
-					<div className="absolute bottom-auto left-0 right-0 top-0 flex h-16 w-full items-center justify-between md:h-18">
-						<div>
-							<h1 className='text-xl font-bold'>DISCLONE</h1>
-						</div>
-						<div className="inline-flex gap-x-1">
-							<p className="hidden md:block">Don&#x27;t have an account?</p>
-							<Link to='signup/' className="underline ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-primary focus-visible:ring-offset-2">Sign up</Link>
-						</div>
-					</div>
+					
 					<div className="container max-w-sm">
 						<div className="mb-6 text-center md:mb-8">
 							<h1 className="mb-5 text-5xl font-bold md:mb-6 md:text-7xl lg:text-8xl">
