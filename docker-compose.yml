@@ -30,10 +30,12 @@ services:
       dockerfile: Dockerfile
     container_name: django
     command: >
-      bash -c "python manage.py makemigrations &&
+      bash -c "source /disclone/backend/.venv/bin/activate &&
+               pip uninstall channels -y &&
+               pip install -U channels &&
+               python manage.py makemigrations &&
                python manage.py migrate &&
-               daphne disclone_proj.asgi:application --bind 0.0.0.0:8000 &&
-               gunicorn dislone_proj.wsgi:application --bind 0.0.0.0:8080"
+               python manage.py runserver 0.0.0.0:8000"
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
@@ -41,6 +43,7 @@ services:
       - DEBUG=True
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - PYTHONPATH=/disclone/backend
     ports:
       - '8000:8000'
     volumes:

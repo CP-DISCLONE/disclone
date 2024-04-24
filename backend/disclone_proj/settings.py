@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
-    'channels',
     'user_app',
     'chat_app'
 ]
@@ -109,15 +108,15 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            'hosts': 'redis://localhost:6379/0'
-        }
+            'hosts': [("127.0.0.1", 6379)],
+        },
     }
 }
 
 CELERY_BROKER_URL = "redis://localhost:6379/0"
 CELERY_RESULT_BACKEND = "redis://localhost:6379/0"
 
-ASGI_APPLICATION = 'disclone_proj.routing.application'
+ASGI_APPLICATION = 'disclone_proj.asgi.application'
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
