@@ -1,19 +1,41 @@
-import { Link } from "react-router-dom";
+import { Link, useOutletContext } from "react-router-dom";
 import { FormEvent, useState } from "react";
+import { api } from "../utilities";
+import { User } from "../types/usertypes";
+import { AxiosResponse } from "axios";
 
 const SignupPage = () => {
-    const [inputName, setInputName] = useState('')
-    const [inputEmail, setInputEmail] = useState('')
-    const [inputPassword, setInputPassword] = useState('')
+    const { currentUser, setCurrentUser } = useOutletContext()
+    const [inputDisplayName, setInputDisplayName] = useState<string | null>('')
+    const [inputEmail, setInputEmail] = useState<string | null>('')
+    const [inputPassword, setInputPassword] = useState<string | null>('')
+    const [inputFirstName, setInputFirstName] = useState<string | null>('')
+    const [inputLastName, setInputLastName] = useState<string | null>('')
 
-    const handleSignup = (e: FormEvent) => {
+    const handleSignup = async (e: FormEvent) => {
         e.preventDefault()
-        console.log(inputName)
-        console.log(inputEmail)
-        console.log(inputPassword)
+        const resp: AxiosResponse = await api.post(
+            'users/signup/', {
+            email: inputEmail,
+            display_name: inputDisplayName,
+            first_name: inputFirstName,
+            last_name: inputLastName,
+            password: inputPassword
+        }
+        )
+        if (resp.status === 201) {
+            const { Token } = resp.data
+            console.log('successfully signed up, user info', resp.data)
+            localStorage.setItem("token", Token)
+            api.defaults.headers.common["Authorization"] = `Token ${Token}`
+            console.log('Added token to localstorage and auth header.')
+            setCurrentUser({ email: resp.data.Email, display_name: resp.data['Display Name'] })
+        } else {
+            console.log('Signup failed:', resp.data)
+        }
 
         // reset form inputs
-        setInputName('')
+        setInputDisplayName('')
         setInputEmail('')
         setInputPassword('')
     }
@@ -43,21 +65,49 @@ const SignupPage = () => {
                         <form onSubmit={(e) => { handleSignup(e) }} className="grid grid-cols-1 gap-6">
                             <div className="grid w-full items-center">
                                 <label
-                                    className="mb-2 peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                    className="peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                     htmlFor="name">
-                                    Name*
+                                    First Name*
                                 </label>
                                 <input
                                     type="text"
                                     className="flex size-full min-h-11 border border-border-primary bg-background-primary px-3 py-2 align-middle file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-neutral focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                                     id="name"
-                                    value={inputName}
-                                    onChange={(e) => { setInputName(e.target.value) }}
+                                    value={inputFirstName}
+                                    onChange={(e) => { setInputFirstName(e.target.value) }}
                                 />
                             </div>
                             <div className="grid w-full items-center">
                                 <label
-                                    className="mb-2 peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                    className="peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                    htmlFor="name">
+                                    Last Name*
+                                </label>
+                                <input
+                                    type="text"
+                                    className="flex size-full min-h-11 border border-border-primary bg-background-primary px-3 py-2 align-middle file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-neutral focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                                    id="name"
+                                    value={inputLastName}
+                                    onChange={(e) => { setInputLastName(e.target.value) }}
+                                />
+                            </div>
+                            <div className="grid w-full items-center">
+                                <label
+                                    className="peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                    htmlFor="name">
+                                    Display Name*
+                                </label>
+                                <input
+                                    type="text"
+                                    className="flex size-full min-h-11 border border-border-primary bg-background-primary px-3 py-2 align-middle file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-neutral focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                                    id="name"
+                                    value={inputDisplayName}
+                                    onChange={(e) => { setInputDisplayName(e.target.value) }}
+                                />
+                            </div>
+                            <div className="grid w-full items-center">
+                                <label
+                                    className="peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                     htmlFor="email">
                                     Email*
                                 </label>
@@ -71,7 +121,7 @@ const SignupPage = () => {
                             </div>
                             <div className="grid w-full items-center">
                                 <label
-                                    className="mb-2 peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                    className="peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                     htmlFor="password">
                                     Password*
                                 </label>
