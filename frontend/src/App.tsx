@@ -9,6 +9,8 @@ interface Context {
   setCurrentUser: React.Dispatch<React.SetStateAction<User | null>>
 }
 
+
+
 function App() {
   const [currentUser, setCurrentUser] = useState<User | null>(null)
 
@@ -20,7 +22,7 @@ function App() {
 
   return (
     <>
-      <NavBar />
+      {currentUser ? <NavBar currentUser={currentUser} /> : null}
       <Outlet context={{ currentUser, setCurrentUser } satisfies Context} />
 
     </>
