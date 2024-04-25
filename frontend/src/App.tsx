@@ -23,7 +23,7 @@ function App() {
   return (
     <>
       {/* I would like to make it so nav bar is always there, but the buttons on it render based on if current user exists, but it was giving me a type error for now. */}
-      {currentUser ? <NavBar currentUser={currentUser} /> : null}
+      {currentUser ? <NavBar currentUser={currentUser} setCurrentUser={setCurrentUser} /> : null}
       <Outlet context={{ currentUser, setCurrentUser } satisfies Context} />
 
     </>
