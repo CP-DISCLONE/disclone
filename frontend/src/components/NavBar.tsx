@@ -27,9 +27,9 @@ function NavBar() {
     >
       <li className="w-full lg:w-auto">
         <a
-          href="#"
+          href="chatroom/"
           className="relative block py-3 text-center text-md ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-primary focus-visible:ring-offset-2 lg:px-4 lg:py-2 lg:text-base"
-          >Resume</a
+          >Enter Chatroom</a
         >
       </li>
       <li className="w-full lg:w-auto">
