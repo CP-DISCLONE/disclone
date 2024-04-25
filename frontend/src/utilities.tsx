@@ -1,7 +1,7 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios'
 import { User } from './types/usertypes';
 export const api: AxiosInstance = axios.create({
-    baseURL: "http://0.0.0.0:8000/app/"
+    baseURL: "http://0.0.0.0:8000/api/v1/"
 })
 
 export const userConfirmation = async (): Promise<User | null> => {
