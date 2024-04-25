@@ -27,7 +27,7 @@ class Info (TokenReq):
         return Response(data, status=HTTP_200_OK)
 
     def put(self, request) -> Response:
-        data = data.request.copy()
+        data = request.data.copy()
         user = User.objects.get(username=request.user.email)
         if data.get("display_name") and "display_name" in data:
             user.display_name = data.get("display_name")
