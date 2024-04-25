@@ -28,11 +28,12 @@ const NavBar: React.FC<NavProps> = ({ currentUser }): JSX.Element => {
             className="absolute left-0 top-16 flex hidden h-dvh w-full flex-col items-center justify-start border-b border-border-primary bg-white px-[5%] pt-4 lg:static lg:flex lg:h-auto lg:w-auto lg:flex-row lg:justify-center lg:border-none lg:px-0 lg:pt-0"
           >
             <li className="w-full lg:w-auto">
-              <a
-                href="#"
-                className="relative block py-3 text-center text-md ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-primary focus-visible:ring-offset-2 lg:px-4 lg:py-2 lg:text-base">
-                Resume
-              </a>
+              <Link
+                to="chatroom/"
+                className="relative block py-3 text-center text-md ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-primary focus-visible:ring-offset-2 lg:px-4 lg:py-2 lg:text-base"
+              >
+                Enter Chat Room
+              </Link>
             </li>
             <li className="w-full lg:w-auto">
               <a
@@ -77,13 +78,11 @@ const NavBar: React.FC<NavProps> = ({ currentUser }): JSX.Element => {
           </ul>
           <div className="flex min-h-16 items-center justify-end gap-x-4">
             <div>
-              <Link to='account/'>
-                <button
-                  className="inline-flex items-center justify-center gap-3 whitespace-nowrap border border-border-primary bg-background-alternative px-4 py-1 text-text-alternative ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-primary focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 md:px-6 md:py-2"
-                >
-                  {currentUser ? currentUser.displayName : null}
-                </button>
-              </Link>
+              <button
+                className="inline-flex items-center justify-center gap-3 whitespace-nowrap border border-border-primary bg-background-alternative px-4 py-1 text-text-alternative ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-primary focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 md:px-6 md:py-2"
+              >
+                Contact
+              </button>
             </div>
             <button
               className="-mr-2 flex size-12 flex-col items-center justify-center lg:hidden"
@@ -101,6 +100,8 @@ const NavBar: React.FC<NavProps> = ({ currentUser }): JSX.Element => {
           </div>
         </div>
       </nav>
+
+
     </>
   );
 }
