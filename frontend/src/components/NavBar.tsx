@@ -78,11 +78,13 @@ const NavBar: React.FC<NavProps> = ({ currentUser }): JSX.Element => {
           </ul>
           <div className="flex min-h-16 items-center justify-end gap-x-4">
             <div>
-              <button
-                className="inline-flex items-center justify-center gap-3 whitespace-nowrap border border-border-primary bg-background-alternative px-4 py-1 text-text-alternative ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-primary focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 md:px-6 md:py-2"
-              >
-                Contact
-              </button>
+              <Link to='account/'>
+                <button
+                  className="inline-flex items-center justify-center gap-3 whitespace-nowrap border border-border-primary bg-background-alternative px-4 py-1 text-text-alternative ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-primary focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 md:px-6 md:py-2"
+                >
+                  {currentUser ? currentUser.displayName : null}
+                </button>
+              </Link>
             </div>
             <button
               className="-mr-2 flex size-12 flex-col items-center justify-center lg:hidden"
