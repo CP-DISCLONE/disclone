@@ -1,24 +1,51 @@
-import { Link } from "react-router-dom";
+import { Link, useOutletContext } from "react-router-dom";
 import { FormEvent, useState } from "react";
+import { AxiosResponse } from "axios";
+import { api } from "../utilities";
 
 const LandingPage = () => {
-	const [inputEmail, setInputEmail] = useState('')
-	const [inputPassword, setInputPassword] = useState('')
+	const { currentUser, setCurrentUser } = useOutletContext()
+	const [inputEmail, setInputEmail] = useState<string>('')
+	const [inputPassword, setInputPassword] = useState<string>('')
 
-	const handleLogin = (e: FormEvent) => {
+	const handleLogin = async (e: FormEvent) => {
 		e.preventDefault()
-		console.log(inputEmail)
-		console.log(inputPassword)
-
+		try {
+			const resp: AxiosResponse = await api.post(
+				'users/login/',
+				{
+					email: inputEmail,
+					password: inputPassword
+				}
+			)
+			const { token } = resp.data
+			console.log('Successully logged in.')
+			api.defaults.headers.common["Authorization"] = `Token ${token}`
+			localStorage.setItem("token", token)
+			setCurrentUser({ email: resp.data.email, displayName: resp.data.display_name, firstName: resp.data.first_name, lastName: resp.data.last_name })
+		} catch (error) {
+			console.log('Login failed: ', error)
+		}
 		// reset form inputs
 		setInputEmail('')
 		setInputPassword('')
 	}
+
 	return (
 		<>
 			<section className="px-[5%]">
 				<div className="relative flex min-h-svh flex-col justify-center items-stretch overflow-auto py-24 lg:py-20">
-					
+					<div className="absolute bottom-auto left-0 right-0 top-0 flex h-16 w-full items-center justify-between md:h-18">
+						<div>
+							<h1 className='text-xl font-bold'>DISCLONE</h1>
+						</div>
+						<div className="inline-flex gap-x-1">
+							<p className="hidden md:block">Don't have an account?</p>
+							<Link to='signup/' className="underline ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-primary focus-visible:ring-offset-2">
+								Sign Up
+							</Link>
+						</div>
+					</div>
 					<div className="container max-w-sm">
 						<div className="mb-6 text-center md:mb-8">
 							<h1 className="mb-5 text-5xl font-bold md:mb-6 md:text-7xl lg:text-8xl">
