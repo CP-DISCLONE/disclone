@@ -13,7 +13,7 @@ class User(AbstractUser):
         max_length=50, validators=[validate_first_name])
     last_name = models.CharField(
         max_length=50, validators=[validate_last_name])
-    profile_picture = models.ImageField(null=True)
+    profile_picture = models.ImageField(null=True, blank=True)
     is_admin = models.BooleanField(default=False)
     is_moderator = models.BooleanField(default=False)
     # servers: set by users field of Server

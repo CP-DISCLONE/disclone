@@ -6,6 +6,7 @@ import NotFoundPage from "./pages/NotFoundPage"
 import ErrorPage from "./pages/ErrorPage"
 import SignupPage from "./pages/SignupPage";
 import ChatRoom from "./pages/ChatRoom";
+import AccountInfo from "./pages/AccountInfo";
 
 const Router = createBrowserRouter([
     {
@@ -28,6 +29,10 @@ const Router = createBrowserRouter([
             {
                 path: "signup/",
                 element: <SignupPage />
+            },
+            {
+                path: "account/",
+                element: <AccountInfo />
             }
         ],
         errorElement: <ErrorPage />

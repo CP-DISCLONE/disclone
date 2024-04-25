@@ -27,7 +27,7 @@ class Info (TokenReq):
         return Response(data, status=HTTP_200_OK)
 
     def put(self, request) -> Response:
-        data = data.request.copy()
+        data = request.data.copy()
         user = User.objects.get(username=request.user.email)
         if data.get("display_name") and "display_name" in data:
             user.display_name = data.get("display_name")
@@ -39,7 +39,7 @@ class Info (TokenReq):
             return Response(user_data, status=HTTP_200_OK)
         except ValidationError as e:
             return Response(e.message_dict, status=HTTP_400_BAD_REQUEST)
-    
+
 
 class Sign_up(APIView):
     def post(self, request) -> Response:
@@ -62,13 +62,15 @@ class Sign_up(APIView):
                 status=HTTP_201_CREATED)
             return _response
         except ValidationError as e:
+            print(e)
             return Response(e.message_dict, status=HTTP_400_BAD_REQUEST)
 
 
 class Log_in(APIView):
     def post(self, request) -> Response:
         data = request.data.copy()
-        user = authenticate(username=data.get("email"), password=data.get("password"))
+        user = authenticate(username=data.get("email"),
+                            password=data.get("password"))
         if user:
             token, created = Token.objects.get_or_create(user=user)
             login(request, user)
@@ -83,6 +85,7 @@ class Log_in(APIView):
                 status=HTTP_200_OK)
             return _response
         return Response("No user matching these credentials", status=HTTP_404_NOT_FOUND)
+
 
 class Log_out(APIView):
     def post(self, request):
