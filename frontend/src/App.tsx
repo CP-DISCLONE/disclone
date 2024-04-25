@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
 import { Outlet } from 'react-router-dom'
 import NavBar from './components/NavBar'
@@ -12,6 +12,9 @@ interface Context {
 function App() {
   const [currentUser, setCurrentUser] = useState<User | null>(null)
 
+  useEffect(() => {
+    console.log(`Current user updated: ${currentUser?.displayName}`)
+  }, [currentUser])
 
   return (
     <>

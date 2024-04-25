@@ -1,43 +1,44 @@
 import { Link, useOutletContext } from "react-router-dom";
 import { FormEvent, useState } from "react";
 import { api } from "../utilities";
-import { User } from "../types/usertypes";
-import { AxiosResponse } from "axios";
+import { AxiosResponse, } from "axios";
 
 const SignupPage = () => {
     const { currentUser, setCurrentUser } = useOutletContext()
-    const [inputDisplayName, setInputDisplayName] = useState<string | null>('')
-    const [inputEmail, setInputEmail] = useState<string | null>('')
-    const [inputPassword, setInputPassword] = useState<string | null>('')
-    const [inputFirstName, setInputFirstName] = useState<string | null>('')
-    const [inputLastName, setInputLastName] = useState<string | null>('')
+    const [inputDisplayName, setInputDisplayName] = useState<string>('')
+    const [inputEmail, setInputEmail] = useState<string>('')
+    const [inputPassword, setInputPassword] = useState<string>('')
+    const [inputFirstName, setInputFirstName] = useState<string>('')
+    const [inputLastName, setInputLastName] = useState<string>('')
 
     const handleSignup = async (e: FormEvent) => {
         e.preventDefault()
         const resp: AxiosResponse = await api.post(
-            'users/signup/', {
-            email: inputEmail,
-            display_name: inputDisplayName,
-            first_name: inputFirstName,
-            last_name: inputLastName,
-            password: inputPassword
-        }
+            'users/signup/',
+            {
+                email: inputEmail,
+                display_name: inputDisplayName,
+                first_name: inputFirstName,
+                last_name: inputLastName,
+                password: inputPassword
+            }
         )
         if (resp.status === 201) {
-            const { Token } = resp.data
-            console.log('successfully signed up, user info', resp.data)
-            localStorage.setItem("token", Token)
-            api.defaults.headers.common["Authorization"] = `Token ${Token}`
-            console.log('Added token to localstorage and auth header.')
-            setCurrentUser({ email: resp.data.Email, display_name: resp.data['Display Name'] })
+            const { token } = resp.data
+            console.log('Successfully signed up.')
+            localStorage.setItem("token", token)
+            api.defaults.headers.common["Authorization"] = `Token ${token}`
+            setCurrentUser({ email: resp.data.email, displayName: resp.data.display_name })
         } else {
-            console.log('Signup failed:', resp.data)
+            console.log('Signup failed: ', resp.data)
         }
 
         // reset form inputs
         setInputDisplayName('')
         setInputEmail('')
         setInputPassword('')
+        setInputFirstName('')
+        setInputLastName('')
     }
 
     return (

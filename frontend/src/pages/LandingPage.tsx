@@ -1,19 +1,36 @@
-import { Link } from "react-router-dom";
+import { Link, useOutletContext } from "react-router-dom";
 import { FormEvent, useState } from "react";
+import { AxiosResponse } from "axios";
+import { api } from "../utilities";
 
 const LandingPage = () => {
-	const [inputEmail, setInputEmail] = useState('')
-	const [inputPassword, setInputPassword] = useState('')
+	const { currentUser, setCurrentUser } = useOutletContext()
+	const [inputEmail, setInputEmail] = useState<string>('')
+	const [inputPassword, setInputPassword] = useState<string>('')
 
-	const handleLogin = (e: FormEvent) => {
+	const handleLogin = async (e: FormEvent) => {
 		e.preventDefault()
-		console.log(inputEmail)
-		console.log(inputPassword)
-
+		const resp: AxiosResponse = await api.post(
+			'users/login/',
+			{
+				email: inputEmail,
+				password: inputPassword
+			}
+		)
+		if (resp.status === 200) {
+			const { token } = resp.data
+			console.log('Successully logged in.')
+			api.defaults.headers.common["Authorization"] = `Token ${token}`
+			localStorage.setItem("token", token)
+			setCurrentUser({ email: resp.data.email, displayName: resp.data.display_name })
+		} else {
+			console.log('Login failed: ', resp.data)
+		}
 		// reset form inputs
 		setInputEmail('')
 		setInputPassword('')
 	}
+
 	return (
 		<>
 			<section className="px-[5%]">
