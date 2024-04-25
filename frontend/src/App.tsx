@@ -13,7 +13,9 @@ function App() {
   const [currentUser, setCurrentUser] = useState<User | null>(null)
 
   useEffect(() => {
-    console.log(`Current user updated: ${currentUser?.displayName}`)
+    console.log(`Current User Display Name: ${currentUser?.displayName}`)
+    console.log(`Current User First Name: ${currentUser?.firstName}`)
+    console.log(`Current User Last Name: ${currentUser?.lastName}`)
   }, [currentUser])
 
   return (

@@ -13,24 +13,24 @@ const SignupPage = () => {
 
     const handleSignup = async (e: FormEvent) => {
         e.preventDefault()
-        const resp: AxiosResponse = await api.post(
-            'users/signup/',
-            {
-                email: inputEmail,
-                display_name: inputDisplayName,
-                first_name: inputFirstName,
-                last_name: inputLastName,
-                password: inputPassword
-            }
-        )
-        if (resp.status === 201) {
+        try {
+            const resp: AxiosResponse = await api.post(
+                'users/signup/',
+                {
+                    email: inputEmail,
+                    display_name: inputDisplayName,
+                    first_name: inputFirstName,
+                    last_name: inputLastName,
+                    password: inputPassword
+                }
+            )
             const { token } = resp.data
             console.log('Successfully signed up.')
             localStorage.setItem("token", token)
             api.defaults.headers.common["Authorization"] = `Token ${token}`
-            setCurrentUser({ email: resp.data.email, displayName: resp.data.display_name })
-        } else {
-            console.log('Signup failed: ', resp.data)
+            setCurrentUser({ email: resp.data.email, displayName: resp.data.display_name, firstName: resp.data.first_name, lastName: resp.data.last_name })
+        } catch (error) {
+            console.log('Signup failed: ', error)
         }
 
         // reset form inputs

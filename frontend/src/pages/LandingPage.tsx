@@ -10,21 +10,21 @@ const LandingPage = () => {
 
 	const handleLogin = async (e: FormEvent) => {
 		e.preventDefault()
-		const resp: AxiosResponse = await api.post(
-			'users/login/',
-			{
-				email: inputEmail,
-				password: inputPassword
-			}
-		)
-		if (resp.status === 200) {
+		try {
+			const resp: AxiosResponse = await api.post(
+				'users/login/',
+				{
+					email: inputEmail,
+					password: inputPassword
+				}
+			)
 			const { token } = resp.data
 			console.log('Successully logged in.')
 			api.defaults.headers.common["Authorization"] = `Token ${token}`
 			localStorage.setItem("token", token)
-			setCurrentUser({ email: resp.data.email, displayName: resp.data.display_name })
-		} else {
-			console.log('Login failed: ', resp.data)
+			setCurrentUser({ email: resp.data.email, displayName: resp.data.display_name, firstName: resp.data.first_name, lastName: resp.data.last_name })
+		} catch (error) {
+			console.log('Login failed: ', error)
 		}
 		// reset form inputs
 		setInputEmail('')
