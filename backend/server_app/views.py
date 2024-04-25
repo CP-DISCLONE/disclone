@@ -148,6 +148,7 @@ class A_message(TokenReq):
         return Response(message.data, status=HTTP_200_OK)
 
     def put(self, request, server_id, channel_id, message_id) -> Response:
+        # ONLY USER EDITS THEIR OWN POST
         data = request.data.copy()
         message = get_object_or_404(Message, id=message_id)
         ser_message = MessageSerializer(message, data=data, partial=True)
@@ -157,6 +158,7 @@ class A_message(TokenReq):
         return Response(ser_message.errors, status=HTTP_400_BAD_REQUEST)
 
     def delete(self, request, server_id, channel_id, message_id) -> Response:
+        # USER, MODERATORS, OR ADMINS CAN DELETE POSTS
         message = get_object_or_404(Message, id=message_id)
         message.delete()
         return Response(status=HTTP_204_NO_CONTENT)
