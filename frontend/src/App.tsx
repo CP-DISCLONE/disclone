@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import './App.css'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useLoaderData } from 'react-router-dom'
 import NavBar from './components/NavBar'
 import { User } from './types/usertypes'
 
@@ -12,7 +12,7 @@ interface Context {
 
 
 function App() {
-  const [currentUser, setCurrentUser] = useState<User | null>(null)
+  const [currentUser, setCurrentUser] = useState<User | null>(useLoaderData() as User | null)
 
   useEffect(() => {
     console.log(`Current User Display Name: ${currentUser?.displayName}`)

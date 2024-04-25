@@ -1,7 +1,7 @@
 
 
 
-import { Link } from 'react-router-dom';
+import { Link, NavigateFunction, useNavigate } from 'react-router-dom';
 import { User } from '../types/usertypes';
 import React, { useState, useEffect, FormEvent } from 'react';
 import { AxiosResponse } from 'axios';
@@ -13,12 +13,18 @@ interface NavProps {
 }
 
 const NavBar: React.FC<NavProps> = ({ currentUser, setCurrentUser }: NavProps): JSX.Element => {
+
+    const navigate: NavigateFunction = useNavigate()
+
+
     const handleLogOut = async (e: FormEvent) => {
         e.preventDefault()
         try {
             await api.post('users/logout/')
             console.log('Successfully logged out!')
+            localStorage.removeItem("token")
             setCurrentUser(null)
+            navigate('/')
         } catch (error) {
             console.log('Failed to log out: ', error)
         }
@@ -99,7 +105,7 @@ const NavBar: React.FC<NavProps> = ({ currentUser, setCurrentUser }: NavProps): 
                                     {currentUser ? currentUser.displayName : null}
                                 </button>
                             </Link>
-                            {currentUser ? <button onClick={(e) => { handleLogOut(e) }}>Log Out</button> : null}
+                            {currentUser ? <button className='inline-flex items-center justify-center gap-3 whitespace-nowrap border border-border-primary bg-background-alternative px-4 py-1 text-text-alternative ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-primary focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 md:px-6 md:py-2' onClick={(e) => { handleLogOut(e) }}>Log Out</button> : null}
                         </div>
                         <button
                             className="-mr-2 flex size-12 flex-col items-center justify-center lg:hidden"
