@@ -14,6 +14,12 @@ class User(AbstractUser):
     last_name = models.CharField(
         max_length=50, validators=[validate_last_name])
     profile_picture = models.ImageField(null=True)
+    is_admin = models.BooleanField(default=False)
+    is_moderator = models.BooleanField(default=False)
+    # servers: set by users field of Server
+    # owned_servers: set by admin field of Server if user is owner
+    # owned_channels: set by moderators field of Channel if user is a moderator of a channel
+    # messages: set by sender field of Message model
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = [display_name, first_name, last_name]
