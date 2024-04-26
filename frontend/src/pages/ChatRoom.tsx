@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useMemo, FormEvent } from 'react';
+import React, { useState, useEffect, useMemo, FormEvent, ChangeEvent } from 'react';
 
 import ChatMessage from '../components/ChatMessage';
 
@@ -11,6 +11,7 @@ const ChatRoom: React.FC = () => {
 
     interface Message {
         text: string;
+        image: string;
         sender: string;
     }
 
@@ -19,6 +20,7 @@ const ChatRoom: React.FC = () => {
     const [filledForm, setFilledForm] = useState<boolean>(false)
     const [name, setName] = useState<string>('')
     const [room, setRoom] = useState<string>('testroom')
+    const [inputImage, setInputImage] = useState<string>('testroom');
 
     const client: W3CWebSocket = useMemo(() => new W3CWebSocket(`ws://0.0.0.0:8000/ws/chat/${room}/`), [room]);
 
@@ -40,15 +42,35 @@ const ChatRoom: React.FC = () => {
 
     const handleSend = (e: FormEvent): void => {
         e.preventDefault()
-        client.send(
-            JSON.stringify({
-                type: "message",
-                text: inputMsg,
-                sender: name
-            })
-        );
+        if (inputImage) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                const imageBase64 = reader.result as string;
+                client.send(JSON.stringify({
+                    type: 'image', 
+                    image: imageBase64,
+                    sender: name
+                }))
+            }
+            reader.readAsDataURL(inputImage);
+        } else {
+            client.send(
+                JSON.stringify({
+                    type: "message",
+                    text: inputMsg,
+                    sender: name
+                }))
+        }
         setInputMsg('');
+        setInputImage(null);
+        }
     };
+
+    const handleUpload = (e: ChangeEvent<HTMLInputElement>): void => {
+        if (e.target.files && e.target.files.length > 0) {
+            setInputImage(e.target.files[0])
+        }
+    }
 
     return (
 
@@ -113,6 +135,12 @@ const ChatRoom: React.FC = () => {
                                     value={inputMsg}
                                     onChange={(e) => setInputMsg(e.target.value)}
                                     placeholder="Type your message..."
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+                                />
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) => handleUpload(e)}
                                     className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
                                 />
 
