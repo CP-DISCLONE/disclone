@@ -148,17 +148,19 @@ class A_message(TokenReq):
         return Response(message.data, status=HTTP_200_OK)
 
     def put(self, request, server_id, channel_id, message_id) -> Response:
-        # ONLY USER EDITS THEIR OWN POST
         data = request.data.copy()
-        message = get_object_or_404(Message, id=message_id)
-        ser_message = MessageSerializer(message, data=data, partial=True)
-        if ser_message.is_valid():
-            ser_message.save()
-            return Response(ser_message.data, status=HTTP_200_OK)
-        return Response(ser_message.errors, status=HTTP_400_BAD_REQUEST)
+        if request.user.id == get_object_or_404(Message, id=message_id).sender:
+            message = get_object_or_404(Message, id=message_id)
+            ser_message = MessageSerializer(message, data=data, partial=True)
+            if ser_message.is_valid():
+                ser_message.save()
+                return Response(ser_message.data, status=HTTP_200_OK)
+            return Response(ser_message.errors, status=HTTP_400_BAD_REQUEST)
+        return Response(json.dumps({'Error': 'User is not the author of this message'}), status=HTTP_400_BAD_REQUEST)
 
     def delete(self, request, server_id, channel_id, message_id) -> Response:
-        # USER, MODERATORS, OR ADMINS CAN DELETE POSTS
         message = get_object_or_404(Message, id=message_id)
-        message.delete()
-        return Response(status=HTTP_204_NO_CONTENT)
+        if request.user.id == message.sender or request.user.id in get_object_or_404(Channel, id=channel_id).moderators or request.user.id == get_object_or_404(Server, id=server_id).admin:
+            message.delete()
+            return Response(status=HTTP_204_NO_CONTENT)
+        return Response(json.dumps({'Error': 'User is not authorized to delete messages'}), status=HTTP_400_BAD_REQUEST)
