@@ -1,4 +1,6 @@
-import React, { ReactElement } from "react";
+import { ReactElement } from "react";
+import editNoteImage from "../images/EditNoteRounded.svg";
+import removecircleImage from "../images/RemoveCircleOutlineRounded.svg";
 import { Message } from "../types/chatElementTypes";
 
 interface ChatMessageProps {
@@ -16,6 +18,14 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
         <div className=" inline-block text-slate-400">09:31: User Name</div>
         <div key={index} className="">
           {msg.text}
+        </div>
+        <div className="flex flex-row justify-end gap-2">
+          <button className="transform hover:scale-110" title="Edit Message">
+            <img src={editNoteImage} alt="Edit Note" />
+          </button>
+          <button className="transform hover:scale-110" title="Delete Message">
+            <img src={removecircleImage} alt="Remove Circle" />
+          </button>
         </div>
       </div>
     </>
