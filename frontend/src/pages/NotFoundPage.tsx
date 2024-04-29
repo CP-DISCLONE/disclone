@@ -1,8 +1,7 @@
+import { ReactElement } from "react";
 
-const NotFoundPage = () => {
-    return (
-        <h1>Not found page</h1>
-    )
-}
+const NotFoundPage: React.FC = (): ReactElement => {
+  return <h1>Not found page</h1>;
+};
 
 export default NotFoundPage;

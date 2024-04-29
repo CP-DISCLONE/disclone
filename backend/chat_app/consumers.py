@@ -1,4 +1,5 @@
 import json
+import base64
 from channels.generic.websocket import AsyncWebsocketConsumer
 
 
@@ -24,6 +25,17 @@ class TextRoomConsumer(AsyncWebsocketConsumer):
             }
         )
 
+    async def handle_image_message(self, data) -> None:
+        image_data = data['image']
+        sender = data['sender']
+        with open('image.jpg', 'wb') as f:
+            f.write(base64.b64decode(image_data))
+        await self.channel_layer.group_send(self.room_group_name, {
+            'type': 'chat.message', 
+            'message': image_data,
+            'sender': sender
+        })
+
     async def chat_message(self, event) -> None:
         text = event['message']
         sender = event['sender']
@@ -31,3 +43,5 @@ class TextRoomConsumer(AsyncWebsocketConsumer):
             'text': text,
             'sender': sender
         }))
+
+
