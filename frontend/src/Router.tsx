@@ -7,6 +7,8 @@ import SignupPage from "./pages/SignupPage";
 import ChatRoom from "./pages/ChatRoom";
 import AccountInfo from "./pages/AccountInfo";
 import { userConfirmation } from "./utilities/userUtilities";
+import VideoChatPage from "./pages/VideoChatPage";
+import VideoChat from "./components/VideoChat";
 
 const router = createBrowserRouter([
   {
@@ -34,6 +36,10 @@ const router = createBrowserRouter([
       {
         path: "account/",
         element: <AccountInfo />,
+      },
+      {
+        path: "videochat/",
+        element: <VideoChat />,
       },
     ],
     errorElement: <ErrorPage />,

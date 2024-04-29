@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo, FormEvent, ReactElement } from "react";
 import ChatMessage from "../components/ChatMessage";
+import VideoChat from "../components/VideoChat";
 import { w3cwebsocket as W3CWebSocket, IMessageEvent } from "websocket";
 import { Message } from "../types/chatElementTypes";
 import { ContextType } from "../types/contextTypes";
@@ -47,7 +48,9 @@ const ChatRoom: React.FC = (): ReactElement => {
     <>
       <div className="">
         <div className="justify-center">
+        
           <h1 className="text-center text-4xl">Room Name</h1>
+         
           <div className="grid grid-cols-8 gap-1  h-[800px]">
             <div className="col-span-1 bg-royalblue-800 p-2 m-1 flex flex-col rounded-md text-lg text-gray-100">
               Channels:
