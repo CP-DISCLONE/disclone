@@ -35,7 +35,7 @@ const NavBar: React.FC<ContextType> = ({
           <ul className="absolute left-0 top-16 flex h-dvh w-full flex-col items-center justify-start border-b border-border-primary bg-white px-[5%] pt-4 lg:static lg:flex lg:h-auto lg:w-auto lg:flex-row lg:justify-center lg:border-none lg:px-0 lg:pt-0">
             <li className="w-full lg:w-auto">
               <Link
-                to="chatroom/"
+                to="server/1/channel/1/"
                 className="relative block py-3 text-center text-md ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-primary focus-visible:ring-offset-2 lg:px-4 lg:py-2 lg:text-base"
               >
                 Enter Chat Room

@@ -3,12 +3,18 @@ import ChatMessage from "../components/ChatMessage";
 import { w3cwebsocket as W3CWebSocket, IMessageEvent } from "websocket";
 import { Message } from "../types/chatElementTypes";
 import { ContextType } from "../types/contextTypes";
-import { useOutletContext } from "react-router-dom";
+import { useOutletContext, useParams } from "react-router-dom";
+import { api } from "../utilities/axiosInstance";
+import { AxiosResponse } from "axios";
 
 const ChatRoom: React.FC = (): ReactElement => {
   const { currentUser } = useOutletContext<ContextType>();
   const [inputMsg, setInputMsg] = useState<string>("");
   const [chatLog, setChatLog] = useState<Message[]>([]);
+  const { server_id, channel_id } = useParams()
+
+
+
   const room: string = "testroom"; // Update later to use the channel's name grabbed from request to WSGI
 
   const client: W3CWebSocket = useMemo(
@@ -16,14 +22,19 @@ const ChatRoom: React.FC = (): ReactElement => {
     [room]
   );
 
+  // This useEffect handles opening the websocket and receiving messages
   useEffect((): void => {
+    // Confirms we are connected to websocket
     client.onopen = (): void => {
       console.log("WebSocket Client Connected");
     };
+
+    // accepts broadcast and updates messages on page
     client.onmessage = (message: IMessageEvent): void => {
       const dataFromServer: string = message.data.toString(); // Assuming the server sends stringified JSON
       try {
         const parsedData: Message = JSON.parse(dataFromServer);
+        console.log('update messages')
         setChatLog((prevChatLog) => [...prevChatLog, parsedData]);
       } catch (error) {
         console.error("Error parsing message:", error);
@@ -31,8 +42,29 @@ const ChatRoom: React.FC = (): ReactElement => {
     };
   }, [client]);
 
-  const handleSend = (e: FormEvent): void => {
+  useEffect((): void => {
+    console.log("Getting messages")
+    const getMessages = async () => {
+      try {
+        const resp = await api.get(`servers/${server_id}/channels/${channel_id}/messages/`)
+        console.log(resp.data)
+        setChatLog(resp.data)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    getMessages()
+  }, [])
+
+  const handleSend = async (e: FormEvent): Promise<void> => {
     e.preventDefault();
+    try {
+      const resp: AxiosResponse = await api.post(`servers/${server_id}/channels/${channel_id}/messages/`, { text: inputMsg, sender: currentUser.displayName })
+      console.log(resp.data)
+    } catch (error) {
+      console.log(error)
+    }
+
     client.send(
       JSON.stringify({
         type: "message",
@@ -42,6 +74,8 @@ const ChatRoom: React.FC = (): ReactElement => {
     );
     setInputMsg("");
   };
+
+
 
   return (
     <>

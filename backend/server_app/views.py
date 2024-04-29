@@ -9,7 +9,8 @@ from rest_framework.status import (
 )
 import json
 from .models import Server, Channel, Message
-from .serializers import ServerSerializer, ChannelSerializer, MessageSerializer
+from user_app.models import User
+from .serializers import ServerSerializer, ChannelSerializer, MessageSerializer, GetMessageSerializer
 from user_app.views import TokenReq
 
 
@@ -46,7 +47,7 @@ class A_server(TokenReq):
     def put(self, request, server_id) -> Response:
         data = request.data.copy()
         curr_server = self.get_server(request, server_id)
-        if request.user.id == curr_server['admin']:
+        if request.user.id == curr_server.admin.id:
             ser_server = ServerSerializer(curr_server, data=data, partial=True)
             if ser_server.is_valid():
                 ser_server.save()
@@ -64,7 +65,7 @@ class A_server(TokenReq):
 
     def delete(self, request, server_id) -> Response:
         curr_server = self.get_server(request, server_id)
-        if request.user.id == curr_server['admin']:
+        if request.user.id == curr_server.admin.id:
             curr_server.delete()
             return Response(status=HTTP_204_NO_CONTENT)
         return Response(json.dumps({'Error': 'User is not the current server admin'}), status=HTTP_400_BAD_REQUEST)
@@ -83,7 +84,7 @@ class All_channels(TokenReq):
         data = request.data.copy()
         curr_server = get_object_or_404(request.user.servers, id=server_id)
         data['server'] = server_id
-        if request.user.id == curr_server['admin']:
+        if request.user.id == curr_server.admin.id:
             new_channel = ChannelSerializer(data=data)
             if new_channel.is_valid():
                 new_channel.save()
@@ -129,12 +130,14 @@ class A_channel(TokenReq):
 class All_messages(TokenReq):
     def get(self, request, server_id, channel_id) -> Response:
         channel = get_object_or_404(Channel, id=channel_id)
-        messages = MessageSerializer(channel.messages, many=True)
+        messages = GetMessageSerializer(channel.messages, many=True)
         return Response(messages.data, status=HTTP_200_OK)
 
     def post(self, request, server_id, channel_id) -> Response:
         data = request.data.copy()
         data['channel'] = channel_id
+        sender = get_object_or_404(User, display_name=data['sender'])
+        data['sender'] = sender.id
         new_message = MessageSerializer(data=data)
         if new_message.is_valid():
             new_message.save()

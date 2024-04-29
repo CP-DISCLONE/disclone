@@ -19,7 +19,7 @@ const router = createBrowserRouter([
         element: <LandingPage />,
       },
       {
-        path: "chatroom/",
+        path: "server/:server_id/channel/:channel_id/",
         element: <ChatRoom />,
       },
 
