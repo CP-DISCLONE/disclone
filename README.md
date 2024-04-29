@@ -8,11 +8,12 @@ Discord is a service that allows a large community of online individuals to come
 
 ## Purpose
 
-This project was a way for our group to implement many new concepts that we had little experience working with. Creating our own asnychronous application with Django Channels and Redis was a challenge, but we gained a lot of knowledge doing so. If you would like to see more about the project structure and architecture, please see: ==architecture documentation==.
+This project was a way for our group to implement many new concepts that we had little experience working with. Creating our own asnychronous application with Django Channels and Redis was a challenge, but we gained a lot of knowledge doing so. If you would like to see more about the project structure and architecture, please see: [Architecture](./docs/architecture.md).
 
 ## Contributors
 
 The Members and Developers of this project are:
+
 - Nathan Pennington
 - Jordan Edgington
 - Jordan Yamada
