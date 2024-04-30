@@ -1,4 +1,4 @@
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useEffect, useState, FormEvent } from "react";
 import { Channel } from "../types/channelElementTypes";
 import { api } from "../utilities/axiosInstance";
 import { AxiosResponse } from "axios";
@@ -7,10 +7,11 @@ import ChannelPage from "./ChannelPage";
 import ChatRoom from "./ChatRoom";
 import Modal from "../components/Modal";
 
+
 const ServerPage: React.FC = (): ReactElement => {
     const [myChannels, setMyChannels] = useState<Channel[]>([])
     const [currentChannel, setCurrentChannel] = useState<Channel | null>(null)
-    const [showModal, setShowModal] = useState<boolean>(false)
+    const [newChannelName, setNewChannelName] = useState<string>('')
 
     const { server_id } = useParams<string>()
 
@@ -19,11 +20,20 @@ const ServerPage: React.FC = (): ReactElement => {
         setCurrentChannel(channel);
     }
 
-    const handleShowModal = (showModal: boolean): void => {
-        setShowModal(!showModal)
+
+    const handleAddChannel = async (e: FormEvent): Promise<void> => {
+        e.preventDefault()
+        const resp: AxiosResponse = await api.post(`/servers/${server_id}/channels/`, { name: newChannelName })
+        try {
+            const resp2: AxiosResponse = await api.get(`servers/${server_id}/channels/`)
+            console.log("getting channels")
+            setMyChannels(resp2.data)
+        } catch (error) {
+            console.log(error)
+        }
+
+        setNewChannelName('')
     }
-
-
 
 
     useEffect(() => {
@@ -37,19 +47,23 @@ const ServerPage: React.FC = (): ReactElement => {
             }
         }
         getChannels()
-    }, [handleAddChannel])
+    }, [])
 
     return (
         <>
             <h1>Server Page</h1>
             <ul className="w-1/6">
-                {myChannels ? myChannels.map((channel) => <li onClick={() => handleSelectChannel(channel)} key={channel.id}><ChannelPage channel={channel} /></li>) : null}
-                <li onClick={() => handleShowModal(showModal)}> <p> + </p></li>
+                {myChannels ? myChannels.map((channel) => <li onClick={() => handleSelectChannel(channel)} key={channel.id}><ChannelPage channel={channel} myChannels={myChannels} setMyChannels={setMyChannels} /></li>) : null}
+                <li>
+                    <Modal
+                        handleAddChannel={handleAddChannel}
+                        newChannelName={newChannelName}
+                        setNewChannelName={setNewChannelName}
+                    />
+                </li>
             </ul>
-            <Modal
-                showModal={showModal}
-                handleShowModal={handleShowModal}
-            />
+
+
 
             {currentChannel ? <ChatRoom key={currentChannel.id} channel={currentChannel} /> : <div>Please select a channel</div>}
         </>

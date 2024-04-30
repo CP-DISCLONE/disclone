@@ -93,7 +93,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ channel }): ReactElement => {
     <>
       <div className="">
         <div className="justify-center">
-          <h1 className="text-center text-4xl">Room Name</h1>
+          <h1 className="text-center text-4xl">{channel.name}</h1>
           <div className="grid grid-cols-8 gap-1  h-[800px]">
             <div className="col-span-2 p-2 m-1 gap-4 flex flex-col text-lg text-gray-400">
               Users:

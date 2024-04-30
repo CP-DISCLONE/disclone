@@ -19,6 +19,7 @@ const NavBar: React.FC<ContextType> = ({
       await api.post("users/logout/");
       console.log("Successfully logged out!");
       localStorage.removeItem("token");
+      delete api.defaults.headers.common['Authorization']
       setCurrentUser(null);
       navigate("/");
     } catch (error) {
