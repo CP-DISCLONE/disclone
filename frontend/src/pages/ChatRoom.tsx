@@ -4,6 +4,8 @@ import { w3cwebsocket as W3CWebSocket, IMessageEvent } from "websocket";
 import { Message } from "../types/chatElementTypes";
 import { ContextType } from "../types/contextTypes";
 import { useOutletContext } from "react-router-dom";
+import Picker from "emoji-picker-react";
+
 
 const ChatRoom: React.FC = (): ReactElement => {
     const [inputImage, setInputImage] = useState<File | null>(null);
