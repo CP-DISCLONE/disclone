@@ -6,6 +6,7 @@ import { ContextType } from "../types/contextTypes";
 import { useOutletContext, useParams } from "react-router-dom";
 import { api } from "../utilities/axiosInstance";
 import { AxiosResponse } from "axios";
+import { format, toZonedTime } from 'date-fns-tz';
 
 const ChatRoom: React.FC = (): ReactElement => {
   const { currentUser } = useOutletContext<ContextType>();
@@ -34,6 +35,7 @@ const ChatRoom: React.FC = (): ReactElement => {
       const dataFromServer: string = message.data.toString(); // Assuming the server sends stringified JSON
       try {
         const parsedData: Message = JSON.parse(dataFromServer);
+        console.log(parsedData)
         console.log('update messages')
         setChatLog((prevChatLog) => [...prevChatLog, parsedData]);
       } catch (error) {
@@ -44,9 +46,9 @@ const ChatRoom: React.FC = (): ReactElement => {
 
   useEffect((): void => {
     console.log("Getting messages")
-    const getMessages = async () => {
+    const getMessages = async (): Promise<void> => {
       try {
-        const resp = await api.get(`servers/${server_id}/channels/${channel_id}/messages/`)
+        const resp: AxiosResponse = await api.get(`servers/${server_id}/channels/${channel_id}/messages/`)
         console.log(resp.data)
         setChatLog(resp.data)
       } catch (error) {
@@ -64,12 +66,17 @@ const ChatRoom: React.FC = (): ReactElement => {
     } catch (error) {
       console.log(error)
     }
+    const currentUtcDate = new Date();
+    const utcDateInSpecificTimezone = toZonedTime(currentUtcDate, 'Etc/UTC')
+
+    const datetime: string = format(utcDateInSpecificTimezone, "HH:mm - MMMM dd, yyyy")
 
     client.send(
       JSON.stringify({
         type: "message",
         text: inputMsg,
         sender: currentUser?.displayName,
+        datetime: datetime
       })
     );
     setInputMsg("");

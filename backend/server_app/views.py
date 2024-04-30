@@ -12,6 +12,7 @@ from .models import Server, Channel, Message
 from user_app.models import User
 from .serializers import ServerSerializer, ChannelSerializer, MessageSerializer, GetMessageSerializer
 from user_app.views import TokenReq
+from datetime import datetime
 
 
 class All_servers(TokenReq):
@@ -138,6 +139,7 @@ class All_messages(TokenReq):
         data['channel'] = channel_id
         sender = get_object_or_404(User, display_name=data['sender'])
         data['sender'] = sender.id
+        data['datetime'] = datetime.now()
         new_message = MessageSerializer(data=data)
         if new_message.is_valid():
             new_message.save()
@@ -156,7 +158,6 @@ class A_message(TokenReq):
             message = get_object_or_404(Message, id=message_id)
             ser_message = MessageSerializer(message, data=data, partial=True)
             if ser_message.is_valid():
-                ser_message.save()
                 return Response(ser_message.data, status=HTTP_200_OK)
             return Response(ser_message.errors, status=HTTP_400_BAD_REQUEST)
         return Response(json.dumps({'Error': 'User is not the author of this message'}), status=HTTP_400_BAD_REQUEST)
