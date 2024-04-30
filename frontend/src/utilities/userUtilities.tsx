@@ -1,4 +1,4 @@
-import { User } from "../types/userTypes";
+import { User } from "../types/usertypes";
 import { api } from "./axiosInstance";
 import { AxiosResponse } from "axios";
 

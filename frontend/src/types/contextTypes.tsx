@@ -1,4 +1,4 @@
-import { User } from "./userTypes";
+import { User } from "./usertypes";
 
 export interface ContextType {
   currentUser: User | null;
