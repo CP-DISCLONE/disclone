@@ -1,4 +1,4 @@
-from rest_framework.serializers import ModelSerializer, SerializerMethodField
+from rest_framework.serializers import ModelSerializer, SerializerMethodField, DateTimeField
 from .models import Server, Channel, Message
 from user_app.serializers import UserSerializer
 from user_app.models import User
@@ -6,6 +6,7 @@ from user_app.models import User
 
 class GetMessageSerializer(ModelSerializer):
     sender = SerializerMethodField()
+    datetime = DateTimeField(format="%H:%M - %B %d, %Y ")
 
     class Meta:
         model = Message

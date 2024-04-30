@@ -27,3 +27,4 @@ class Message(models.Model):
     sender = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='messages')
     text = models.TextField(validators=[v.MinLengthValidator(1)])
+    datetime = models.DateTimeField(null=True, blank=True)
