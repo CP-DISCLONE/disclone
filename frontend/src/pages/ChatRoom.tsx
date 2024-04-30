@@ -7,16 +7,21 @@ import { useOutletContext, useParams } from "react-router-dom";
 import { api } from "../utilities/axiosInstance";
 import { AxiosResponse } from "axios";
 import { format, toZonedTime } from 'date-fns-tz';
+import { Channel } from "../types/channelElementTypes";
 
-const ChatRoom: React.FC = (): ReactElement => {
+interface ChatRoomProps {
+  channel: Channel;
+}
+
+const ChatRoom: React.FC<ChatRoomProps> = ({ channel }): ReactElement => {
   const { currentUser } = useOutletContext<ContextType>();
   const [inputMsg, setInputMsg] = useState<string>("");
   const [chatLog, setChatLog] = useState<Message[]>([]);
-  const { server_id, channel_id } = useParams()
+  const { server_id } = useParams()
 
 
 
-  const room: string = "testroom"; // Update later to use the channel's name grabbed from request to WSGI
+  const room: string = `servers${server_id}channels${channel.id}`; // Update later to use the channel's name grabbed from request to WSGI
 
   const client: W3CWebSocket = useMemo(
     (): W3CWebSocket => new W3CWebSocket(`ws://0.0.0.0:8000/ws/chat/${room}/`),
@@ -48,7 +53,7 @@ const ChatRoom: React.FC = (): ReactElement => {
     console.log("Getting messages")
     const getMessages = async (): Promise<void> => {
       try {
-        const resp: AxiosResponse = await api.get(`servers/${server_id}/channels/${channel_id}/messages/`)
+        const resp: AxiosResponse = await api.get(`servers/${server_id}/channels/${channel.id}/messages/`)
         console.log(resp.data)
         setChatLog(resp.data)
       } catch (error) {
@@ -61,7 +66,7 @@ const ChatRoom: React.FC = (): ReactElement => {
   const handleSend = async (e: FormEvent): Promise<void> => {
     e.preventDefault();
     try {
-      const resp: AxiosResponse = await api.post(`servers/${server_id}/channels/${channel_id}/messages/`, { text: inputMsg, sender: currentUser.displayName })
+      const resp: AxiosResponse = await api.post(`servers/${server_id}/channels/${channel.id}/messages/`, { text: inputMsg, sender: currentUser.displayName })
       console.log(resp.data)
     } catch (error) {
       console.log(error)
@@ -88,11 +93,8 @@ const ChatRoom: React.FC = (): ReactElement => {
     <>
       <div className="">
         <div className="justify-center">
-          <h1 className="text-center text-4xl">Room Name</h1>
+          <h1 className="text-center text-4xl">{channel.name}</h1>
           <div className="grid grid-cols-8 gap-1  h-[800px]">
-            <div className="col-span-1 bg-royalblue-800 p-2 m-1 flex flex-col rounded-md text-lg text-gray-100">
-              Channels:
-            </div>
             <div className="col-span-2 p-2 m-1 gap-4 flex flex-col text-lg text-gray-400">
               Users:
               <div className="overflow-y-auto hover:bg-royalblue-300 p-2 m-1 flex-wrap flex items-center gap-2  border-b-2 ">

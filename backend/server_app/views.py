@@ -10,7 +10,7 @@ from rest_framework.status import (
 import json
 from .models import Server, Channel, Message
 from user_app.models import User
-from .serializers import ServerSerializer, ChannelSerializer, MessageSerializer, GetMessageSerializer
+from .serializers import ServerOnlySerializer, ChannelSerializer, MessageSerializer, GetMessageSerializer, ServerSerializer, ChannelOnlySerializer
 from user_app.views import TokenReq
 from datetime import datetime
 
@@ -18,7 +18,7 @@ from datetime import datetime
 class All_servers(TokenReq):
     def get(self, request) -> Response:
         servers = get_list_or_404(request.user.servers.all())
-        ser_servers = ServerSerializer(servers, many=True)
+        ser_servers = ServerOnlySerializer(servers, many=True)
         return Response(ser_servers.data, status=HTTP_200_OK)
 
     def post(self, request) -> Response:
@@ -75,7 +75,7 @@ class A_server(TokenReq):
 class All_channels(TokenReq):
     def get(self, request, server_id) -> Response:
         try:
-            channels = ChannelSerializer(
+            channels = ChannelOnlySerializer(
                 request.user.servers.get(id=server_id).channels, many=True)
             return Response(channels.data, status=HTTP_200_OK)
         except Exception as e:
@@ -85,6 +85,7 @@ class All_channels(TokenReq):
         data = request.data.copy()
         curr_server = get_object_or_404(request.user.servers, id=server_id)
         data['server'] = server_id
+        data['moderators'] = [request.user.id]
         if request.user.id == curr_server.admin.id:
             new_channel = ChannelSerializer(data=data)
             if new_channel.is_valid():

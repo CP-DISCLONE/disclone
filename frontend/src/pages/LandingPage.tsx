@@ -3,6 +3,7 @@ import { FormEvent, useState, ReactElement } from "react";
 import { AxiosResponse } from "axios";
 import { api } from "../utilities/axiosInstance";
 import { ContextType } from "../types/contextTypes";
+import { Button } from "@/components/ui/button";
 
 const LandingPage: React.FC = (): ReactElement => {
   const { setCurrentUser } = useOutletContext<ContextType>();
@@ -47,7 +48,7 @@ const LandingPage: React.FC = (): ReactElement => {
                 to="signup/"
                 className="underline ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-primary focus-visible:ring-offset-2"
               >
-                Sign Up
+                <Button>Sign Up</Button>
               </Link>
             </div>
           </div>

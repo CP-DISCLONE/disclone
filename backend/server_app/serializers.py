@@ -33,9 +33,21 @@ class ChannelSerializer(ModelSerializer):
         fields = "__all__"
 
 
+class ChannelOnlySerializer(ModelSerializer):
+    class Meta:
+        model = Channel
+        fields = "__all__"
+
+
 class ServerSerializer(ModelSerializer):
     channels = ChannelSerializer(many=True, read_only=True)
 
+    class Meta:
+        model = Server
+        fields = "__all__"
+
+
+class ServerOnlySerializer(ModelSerializer):
     class Meta:
         model = Server
         fields = "__all__"
