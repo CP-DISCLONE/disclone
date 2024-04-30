@@ -4,11 +4,25 @@ import { api } from "../utilities/axiosInstance";
 import { AxiosResponse } from "axios";
 import { useParams } from "react-router-dom";
 import ChannelPage from "./ChannelPage";
+import ChatRoom from "./ChatRoom";
+import Modal from "../components/Modal";
 
 const ServerPage: React.FC = (): ReactElement => {
     const [myChannels, setMyChannels] = useState<Channel[]>([])
     const [currentChannel, setCurrentChannel] = useState<Channel | null>(null)
+    const [showModal, setShowModal] = useState<boolean>(false)
+
     const { server_id } = useParams<string>()
+
+
+    const handleSelectChannel = (channel: Channel): void => {
+        setCurrentChannel(channel);
+    }
+
+    const handleShowModal = (showModal: boolean): void => {
+        setShowModal(!showModal)
+    }
+
 
 
 
@@ -23,15 +37,21 @@ const ServerPage: React.FC = (): ReactElement => {
             }
         }
         getChannels()
-    }, [])
+    }, [handleAddChannel])
+
     return (
         <>
             <h1>Server Page</h1>
             <ul className="w-1/6">
-                {myChannels ? myChannels.map((channel, idx) => <li key={idx}><ChannelPage channel={channel} /></li>) : null}
+                {myChannels ? myChannels.map((channel) => <li onClick={() => handleSelectChannel(channel)} key={channel.id}><ChannelPage channel={channel} /></li>) : null}
+                <li onClick={() => handleShowModal(showModal)}> <p> + </p></li>
             </ul>
+            <Modal
+                showModal={showModal}
+                handleShowModal={handleShowModal}
+            />
 
-            {currentChannel ? <Chatroom channel={currentChannel} /> : null}
+            {currentChannel ? <ChatRoom key={currentChannel.id} channel={currentChannel} /> : <div>Please select a channel</div>}
         </>
     )
 };

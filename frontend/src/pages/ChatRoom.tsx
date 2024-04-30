@@ -17,11 +17,11 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ channel }): ReactElement => {
   const { currentUser } = useOutletContext<ContextType>();
   const [inputMsg, setInputMsg] = useState<string>("");
   const [chatLog, setChatLog] = useState<Message[]>([]);
-  const { server_id, channel_id } = useParams()
+  const { server_id } = useParams()
 
 
 
-  const room: string = "testroom"; // Update later to use the channel's name grabbed from request to WSGI
+  const room: string = `servers${server_id}channels${channel.id}`; // Update later to use the channel's name grabbed from request to WSGI
 
   const client: W3CWebSocket = useMemo(
     (): W3CWebSocket => new W3CWebSocket(`ws://0.0.0.0:8000/ws/chat/${room}/`),
@@ -53,7 +53,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ channel }): ReactElement => {
     console.log("Getting messages")
     const getMessages = async (): Promise<void> => {
       try {
-        const resp: AxiosResponse = await api.get(`servers/${server_id}/channels/${channel_id}/messages/`)
+        const resp: AxiosResponse = await api.get(`servers/${server_id}/channels/${channel.id}/messages/`)
         console.log(resp.data)
         setChatLog(resp.data)
       } catch (error) {
@@ -66,7 +66,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ channel }): ReactElement => {
   const handleSend = async (e: FormEvent): Promise<void> => {
     e.preventDefault();
     try {
-      const resp: AxiosResponse = await api.post(`servers/${server_id}/channels/${channel_id}/messages/`, { text: inputMsg, sender: currentUser.displayName })
+      const resp: AxiosResponse = await api.post(`servers/${server_id}/channels/${channel.id}/messages/`, { text: inputMsg, sender: currentUser.displayName })
       console.log(resp.data)
     } catch (error) {
       console.log(error)
