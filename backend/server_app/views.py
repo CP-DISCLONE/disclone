@@ -62,7 +62,15 @@ class A_server(TokenReq):
                         Server, id=server_id), lst_of_channel_ids=data.get("lst_of_channels"))
                 return Response(ser_server.data, status=HTTP_200_OK)
             return Response(ser_server.errors, status=HTTP_400_BAD_REQUEST)
-        return Response(json.dumps({'Error': 'User is not the server admin'}), status=HTTP_400_BAD_REQUEST)
+        else:
+            curr_user = get_object_or_404(User, id=request.user.id)
+            if request.user.id not in curr_server.users:
+                curr_server.users.append(curr_user.id)
+                curr_server.full_clean()
+                curr_server.save()
+                return Response("Successfully added user", status=HTTP_200_OK)
+            else:
+                return Response("User already in server", status=HTTP_400_BAD_REQUEST)
 
     def delete(self, request, server_id) -> Response:
         curr_server = self.get_server(request, server_id)
@@ -83,6 +91,9 @@ class All_channels(TokenReq):
 
     def post(self, request, server_id) -> Response:
         data = request.data.copy()
+        print('\n\n\n\n\n\n\n\n\n\n\n\n\n\n')
+        print(request.user.servers)
+        print(server_id)
         curr_server = get_object_or_404(request.user.servers, id=server_id)
         data['server'] = server_id
         data['moderators'] = [request.user.id]
@@ -123,7 +134,10 @@ class A_channel(TokenReq):
     def delete(self, request, server_id, channel_id) -> Response:
         server = get_object_or_404(Server, id=server_id)
         channel = get_object_or_404(Channel, id=channel_id)
-        if request.user.id == server['admin']:
+        print('\n\n\n\n\n\n\n\n\n\n\n')
+        print(request.user.id)
+        print(server.admin.id)
+        if request.user.id == server.admin.id:
             channel.delete()
             return Response(status=HTTP_204_NO_CONTENT)
         return Response(json.dumps({'Error': 'User is not the server admin'}), status=HTTP_400_BAD_REQUEST)
