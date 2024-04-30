@@ -4,7 +4,7 @@ import LandingPage from "./pages/LandingPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import ErrorPage from "./pages/ErrorPage";
 import SignupPage from "./pages/SignupPage";
-import ChatRoom from "./pages/ChatRoom";
+import ServerPage from "./pages/ServerPage";
 import AccountInfo from "./pages/AccountInfo";
 import { userConfirmation } from "./utilities/userUtilities";
 
@@ -19,8 +19,8 @@ const router = createBrowserRouter([
         element: <LandingPage />,
       },
       {
-        path: "server/:server_id/channel/:channel_id/",
-        element: <ChatRoom />,
+        path: "server/:server_id/",
+        element: <ServerPage />,
       },
 
       {

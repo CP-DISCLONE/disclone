@@ -7,8 +7,13 @@ import { useOutletContext, useParams } from "react-router-dom";
 import { api } from "../utilities/axiosInstance";
 import { AxiosResponse } from "axios";
 import { format, toZonedTime } from 'date-fns-tz';
+import { Channel } from "../types/channelElementTypes";
 
-const ChatRoom: React.FC = (): ReactElement => {
+interface ChatRoomProps {
+  channel: Channel;
+}
+
+const ChatRoom: React.FC<ChatRoomProps> = ({ channel }): ReactElement => {
   const { currentUser } = useOutletContext<ContextType>();
   const [inputMsg, setInputMsg] = useState<string>("");
   const [chatLog, setChatLog] = useState<Message[]>([]);
@@ -90,9 +95,6 @@ const ChatRoom: React.FC = (): ReactElement => {
         <div className="justify-center">
           <h1 className="text-center text-4xl">Room Name</h1>
           <div className="grid grid-cols-8 gap-1  h-[800px]">
-            <div className="col-span-1 bg-royalblue-800 p-2 m-1 flex flex-col rounded-md text-lg text-gray-100">
-              Channels:
-            </div>
             <div className="col-span-2 p-2 m-1 gap-4 flex flex-col text-lg text-gray-400">
               Users:
               <div className="overflow-y-auto hover:bg-royalblue-300 p-2 m-1 flex-wrap flex items-center gap-2  border-b-2 ">

@@ -1,12 +1,16 @@
 import { Link, NavigateFunction, useNavigate } from "react-router-dom";
-import React, { FormEvent, ReactElement } from "react";
+import React, { FormEvent, ReactElement, useEffect, useState } from "react";
 import { api } from "../utilities/axiosInstance";
 import { ContextType } from "../types/contextTypes";
+import { AxiosResponse } from "axios";
+import ServerButton from "./ServerButton";
+import { Server } from "../types/serverElementTypes";
 
 const NavBar: React.FC<ContextType> = ({
   currentUser,
   setCurrentUser,
 }: ContextType): ReactElement => {
+  const [myServers, setMyServers] = useState<Server[]>([])
   const navigate: NavigateFunction = useNavigate();
 
   const handleLogOut = async (e: FormEvent): Promise<void> => {
@@ -22,6 +26,19 @@ const NavBar: React.FC<ContextType> = ({
     }
   };
 
+  useEffect(() => {
+    const getServers = async (): Promise<void> => {
+      try {
+        const resp: AxiosResponse = await api.get("servers/");
+        console.log('loading servers')
+        setMyServers(resp.data)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    getServers()
+  }, [])
+
   return (
     <>
       <nav className="flex h-auto min-h-16 w-full items-center border-b border-black bg-white px-[5%] lg:min-h-18">
@@ -33,30 +50,8 @@ const NavBar: React.FC<ContextType> = ({
             />
           </div>
           <ul className="absolute left-0 top-16 flex h-dvh w-full flex-col items-center justify-start border-b border-border-primary bg-white px-[5%] pt-4 lg:static lg:flex lg:h-auto lg:w-auto lg:flex-row lg:justify-center lg:border-none lg:px-0 lg:pt-0">
-            <li className="w-full lg:w-auto">
-              <Link
-                to="server/1/channel/1/"
-                className="relative block py-3 text-center text-md ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-primary focus-visible:ring-offset-2 lg:px-4 lg:py-2 lg:text-base"
-              >
-                Enter Chat Room
-              </Link>
-            </li>
-            <li className="w-full lg:w-auto">
-              <a
-                href="#"
-                className="relative block py-3 text-center text-md ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-primary focus-visible:ring-offset-2 lg:px-4 lg:py-2 lg:text-base"
-              >
-                About
-              </a>
-            </li>
-            <li className="w-full lg:w-auto">
-              <a
-                href="#"
-                className="relative block py-3 text-center text-md ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-primary focus-visible:ring-offset-2 lg:px-4 lg:py-2 lg:text-base"
-              >
-                Link Three
-              </a>
-            </li>
+            {myServers ? myServers.map((server, idx) => <li key={idx}><ServerButton server={server} /></li>) : null}
+
             <li className="w-full lg:w-auto">
               <div>
                 <button className="flex w-full items-center justify-center gap-2 py-3 text-center text-md ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-primary focus-visible:ring-offset-2 lg:w-auto lg:flex-none lg:justify-start lg:gap-2 lg:px-4 lg:py-2 lg:text-base">
