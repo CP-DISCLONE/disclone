@@ -5,7 +5,7 @@ import { AxiosResponse } from "axios";
 import { useParams } from "react-router-dom";
 import ChannelPage from "./ChannelPage";
 import ChatRoom from "./ChatRoom";
-import Modal from "../components/Modal";
+import NewChannelModal from "../components/NewChannelModal";
 
 /**
  * @description Page that displays a Server and all of its related channels
@@ -69,17 +69,17 @@ const ServerPage: React.FC = (): ReactElement => {
       <ul className="w-1/6">
         {myChannels
           ? myChannels.map((channel) => (
-              <li onClick={() => handleSelectChannel(channel)} key={channel.id}>
-                <ChannelPage
-                  channel={channel}
-                  myChannels={myChannels}
-                  setMyChannels={setMyChannels}
-                />
-              </li>
-            ))
+            <li onClick={() => handleSelectChannel(channel)} key={channel.id}>
+              <ChannelPage
+                channel={channel}
+                myChannels={myChannels}
+                setMyChannels={setMyChannels}
+              />
+            </li>
+          ))
           : null}
         <li>
-          <Modal
+          <NewChannelModal
             handleAddChannel={handleAddChannel}
             newChannelName={newChannelName}
             setNewChannelName={setNewChannelName}
