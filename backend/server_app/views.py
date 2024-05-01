@@ -9,14 +9,16 @@ from rest_framework.status import (
 )
 import json
 from .models import Server, Channel, Message
-from .serializers import ServerSerializer, ChannelSerializer, MessageSerializer
+from user_app.models import User
+from .serializers import ServerOnlySerializer, ChannelSerializer, MessageSerializer, GetMessageSerializer, ServerSerializer, ChannelOnlySerializer
 from user_app.views import TokenReq
+from datetime import datetime
 
 
 class All_servers(TokenReq):
     def get(self, request) -> Response:
         servers = get_list_or_404(request.user.servers.all())
-        ser_servers = ServerSerializer(servers, many=True)
+        ser_servers = ServerOnlySerializer(servers, many=True)
         return Response(ser_servers.data, status=HTTP_200_OK)
 
     def post(self, request) -> Response:
@@ -46,7 +48,7 @@ class A_server(TokenReq):
     def put(self, request, server_id) -> Response:
         data = request.data.copy()
         curr_server = self.get_server(request, server_id)
-        if request.user.id == curr_server['admin']:
+        if request.user.id == curr_server.admin.id:
             ser_server = ServerSerializer(curr_server, data=data, partial=True)
             if ser_server.is_valid():
                 ser_server.save()
@@ -60,11 +62,19 @@ class A_server(TokenReq):
                         Server, id=server_id), lst_of_channel_ids=data.get("lst_of_channels"))
                 return Response(ser_server.data, status=HTTP_200_OK)
             return Response(ser_server.errors, status=HTTP_400_BAD_REQUEST)
-        return Response(json.dumps({'Error': 'User is not the server admin'}), status=HTTP_400_BAD_REQUEST)
+        else:
+            curr_user = get_object_or_404(User, id=request.user.id)
+            if request.user.id not in curr_server.users:
+                curr_server.users.append(curr_user.id)
+                curr_server.full_clean()
+                curr_server.save()
+                return Response("Successfully added user", status=HTTP_200_OK)
+            else:
+                return Response("User already in server", status=HTTP_400_BAD_REQUEST)
 
     def delete(self, request, server_id) -> Response:
         curr_server = self.get_server(request, server_id)
-        if request.user.id == curr_server['admin']:
+        if request.user.id == curr_server.admin.id:
             curr_server.delete()
             return Response(status=HTTP_204_NO_CONTENT)
         return Response(json.dumps({'Error': 'User is not the current server admin'}), status=HTTP_400_BAD_REQUEST)
@@ -73,7 +83,7 @@ class A_server(TokenReq):
 class All_channels(TokenReq):
     def get(self, request, server_id) -> Response:
         try:
-            channels = ChannelSerializer(
+            channels = ChannelOnlySerializer(
                 request.user.servers.get(id=server_id).channels, many=True)
             return Response(channels.data, status=HTTP_200_OK)
         except Exception as e:
@@ -81,9 +91,13 @@ class All_channels(TokenReq):
 
     def post(self, request, server_id) -> Response:
         data = request.data.copy()
+        print('\n\n\n\n\n\n\n\n\n\n\n\n\n\n')
+        print(request.user.servers)
+        print(server_id)
         curr_server = get_object_or_404(request.user.servers, id=server_id)
         data['server'] = server_id
-        if request.user.id == curr_server['admin']:
+        data['moderators'] = [request.user.id]
+        if request.user.id == curr_server.admin.id:
             new_channel = ChannelSerializer(data=data)
             if new_channel.is_valid():
                 new_channel.save()
@@ -120,7 +134,10 @@ class A_channel(TokenReq):
     def delete(self, request, server_id, channel_id) -> Response:
         server = get_object_or_404(Server, id=server_id)
         channel = get_object_or_404(Channel, id=channel_id)
-        if request.user.id == server['admin']:
+        print('\n\n\n\n\n\n\n\n\n\n\n')
+        print(request.user.id)
+        print(server.admin.id)
+        if request.user.id == server.admin.id:
             channel.delete()
             return Response(status=HTTP_204_NO_CONTENT)
         return Response(json.dumps({'Error': 'User is not the server admin'}), status=HTTP_400_BAD_REQUEST)
@@ -129,12 +146,15 @@ class A_channel(TokenReq):
 class All_messages(TokenReq):
     def get(self, request, server_id, channel_id) -> Response:
         channel = get_object_or_404(Channel, id=channel_id)
-        messages = MessageSerializer(channel.messages, many=True)
+        messages = GetMessageSerializer(channel.messages, many=True)
         return Response(messages.data, status=HTTP_200_OK)
 
     def post(self, request, server_id, channel_id) -> Response:
         data = request.data.copy()
         data['channel'] = channel_id
+        sender = get_object_or_404(User, display_name=data['sender'])
+        data['sender'] = sender.id
+        data['datetime'] = datetime.now()
         new_message = MessageSerializer(data=data)
         if new_message.is_valid():
             new_message.save()
@@ -153,7 +173,6 @@ class A_message(TokenReq):
             message = get_object_or_404(Message, id=message_id)
             ser_message = MessageSerializer(message, data=data, partial=True)
             if ser_message.is_valid():
-                ser_message.save()
                 return Response(ser_message.data, status=HTTP_200_OK)
             return Response(ser_message.errors, status=HTTP_400_BAD_REQUEST)
         return Response(json.dumps({'Error': 'User is not the author of this message'}), status=HTTP_400_BAD_REQUEST)

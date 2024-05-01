@@ -12,14 +12,23 @@
     "cy:run": "npx cypress run --spec"
   },
   "dependencies": {
+    "@radix-ui/react-dialog": "^1.0.5",
+    "@radix-ui/react-slot": "^1.0.2",
     "autoprefixer": "^10.4.19",
     "axios": "^1.6.8",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
+    "date-fns": "^3.6.0",
+    "date-fns-tz": "^3.1.3",
+    "lucide-react": "^0.376.0",
     "emoji-picker-react": "^4.9.2",
     "postcss": "^8.4.38",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.22.3",
+    "tailwind-merge": "^2.3.0",
     "tailwindcss": "^3.4.3",
+    "tailwindcss-animate": "^1.0.7",
     "websocket": "^1.0.34"
   },
   "devDependencies": {
