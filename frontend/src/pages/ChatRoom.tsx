@@ -12,6 +12,7 @@ const ChatRoom: React.FC = (): ReactElement => {
     const { currentUser } = useOutletContext<ContextType>();
     const [inputMsg, setInputMsg] = useState<string>("");
     const [chatLog, setChatLog] = useState<Message[]>([]);
+    const [chosenEmoji, setChosenEmoji] = useState<string | null>(null);
     const room: string = "testroom"; // Update later to use the channel's name grabbed from request to WSGI
 
     const client: W3CWebSocket = useMemo(
@@ -36,14 +37,21 @@ const ChatRoom: React.FC = (): ReactElement => {
 
     const handleSend = (e: FormEvent): void => {
         e.preventDefault()
-        if (inputImage) {
+        let messageToSend: any = {};
+        if (chosenEmoji){
+          messageToSend = {
+            type: "message",
+            text: inputMsg + chosenEmoji,
+            sender: currentUser?.displayName
+          }
+        } else if (inputImage) {
             const reader = new FileReader();
             reader.onloadend = () => {
                 const imageBase64 = reader.result as string;
                 client.send(JSON.stringify({
                     type: 'image',
                     image: imageBase64,
-                    sender: currentUser.displayName
+                    sender: currentUser?.displayName
                 }))
             }
             reader.readAsDataURL(inputImage);
@@ -52,11 +60,15 @@ const ChatRoom: React.FC = (): ReactElement => {
                 JSON.stringify({
                     type: "message",
                     text: inputMsg,
-                    sender: currentUser.displayName
+                    sender: currentUser?.displayName
                 }))
-        }
+        } 
         setInputMsg('');
         setInputImage(null);
+    };
+
+    const onEmojiClick = (e: any, emojiObject: any) => {
+      setChosenEmoji(emojiObject.emoji);
     }
 
     const handleUpload = (e: ChangeEvent<HTMLInputElement>): void => {
@@ -116,6 +128,7 @@ const ChatRoom: React.FC = (): ReactElement => {
                                     onChange={(e) => handleUpload(e)}
                                     className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
                                 />
+                                <Picker onEmojiClick={onEmojiClick}/>
                             </form>
                         </div>
                     </div>
