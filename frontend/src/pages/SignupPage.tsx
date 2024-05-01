@@ -4,6 +4,11 @@ import { api } from "../utilities/axiosInstance";
 import { AxiosResponse } from "axios";
 import { ContextType } from "../types/contextTypes";
 
+/**
+ * @description The page that renders the User sign up form
+ * 
+ * @returns {ReactElement} The SignupPage
+ */
 const SignupPage: React.FC = (): ReactElement => {
   const { setCurrentUser } = useOutletContext<ContextType>();
   const [inputDisplayName, setInputDisplayName] = useState<string>("");
@@ -12,6 +17,14 @@ const SignupPage: React.FC = (): ReactElement => {
   const [inputFirstName, setInputFirstName] = useState<string>("");
   const [inputLastName, setInputLastName] = useState<string>("");
 
+  /**
+   * @description The handler for a new User submitting their signup request
+   * It takes a User's inputs and makes a post request to the server with the
+   * information. Upon success, it sets the User's authorization token in local
+   * storage and stores them in the currentUser state.
+   * 
+   * @param {FormEvent} e The submission FormEvent 
+   */
   const handleSignup = async (e: FormEvent): Promise<void> => {
     e.preventDefault();
     try {

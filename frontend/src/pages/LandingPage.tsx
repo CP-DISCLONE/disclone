@@ -5,11 +5,24 @@ import { api } from "../utilities/axiosInstance";
 import { ContextType } from "../types/contextTypes";
 import { Button } from "@/components/ui/button";
 
+/**
+ * @description The Landing Page that allows a User to login to the application
+ * and utilize its features
+ *
+ * @returns {ReactElement} The LandingPage
+ */
 const LandingPage: React.FC = (): ReactElement => {
   const { setCurrentUser } = useOutletContext<ContextType>();
   const [inputEmail, setInputEmail] = useState<string>("");
   const [inputPassword, setInputPassword] = useState<string>("");
 
+  /**
+   * @description Handler for User login, a post request is made to the backend
+   * and, if successful, the User's token is grabbed and set in local storage and
+   * the User is set in the currentUser state
+   *
+   * @param {FormEvent} e The submission FormEvent
+   */
   const handleLogin = async (e: FormEvent): Promise<void> => {
     e.preventDefault();
     try {

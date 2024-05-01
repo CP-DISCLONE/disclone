@@ -5,6 +5,12 @@ import NavBar from "./components/NavBar";
 import { User } from "./types/userTypes";
 import { ContextType } from "./types/contextTypes";
 
+/**
+ * @description The main App component that renders all pages and components within the
+ * Outlet, as well as the NavBar.
+ * 
+ * @returns {ReactElement} The application pages with all related components
+ */
 function App() {
   const [currentUser, setCurrentUser] = useState<User | null>(
     useLoaderData() as User | null
