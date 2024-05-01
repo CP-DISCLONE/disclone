@@ -6,6 +6,15 @@ import { AxiosResponse } from "axios";
 import ServerButton from "./ServerButton";
 import { Server } from "../types/serverElementTypes";
 
+/**
+ * @description The NavBar that displays on the application over each page and displays
+ * the current User's display name and all relevant links to the User's available
+ * servers
+ * 
+ * @param {ContextType} props The props passed in from App to the component
+ * 
+ * @returns {ReactElement} The NavBar component
+ */
 const NavBar: React.FC<ContextType> = ({
   currentUser,
   setCurrentUser,
@@ -13,6 +22,13 @@ const NavBar: React.FC<ContextType> = ({
   const [myServers, setMyServers] = useState<Server[]>([])
   const navigate: NavigateFunction = useNavigate();
 
+  /**
+   * @description The handler for a User's logout request. After successful resolution of the
+   * request, the User's token is cleared from local storage and the backend AxiosInstance
+   * headers and they are navigated to the LandingPage
+   * 
+   * @param {FormEvent} e The submission FormEvent
+   */
   const handleLogOut = async (e: FormEvent): Promise<void> => {
     e.preventDefault();
     try {
