@@ -6,23 +6,39 @@ import { ContextType } from "../types/contextTypes";
 import { useOutletContext, useParams } from "react-router-dom";
 import { api } from "../utilities/axiosInstance";
 import { AxiosResponse } from "axios";
-import { format, toZonedTime } from 'date-fns-tz';
+import { format, toZonedTime } from "date-fns-tz";
 import { Channel } from "../types/channelElementTypes";
 
+/**
+ * @description The interface that defines the incoming props from the ServerPage
+ *
+ * @prop {Channel} channel The current Channel being rendered
+ */
 interface ChatRoomProps {
   channel: Channel;
 }
 
-const ChatRoom: React.FC<ChatRoomProps> = ({ channel }): ReactElement => {
+/**
+ * @description The ChatRoom page that renders the current Channel's messages
+ * and a form for users to submit new messages
+ * 
+ * @param {ChatRoomProps} channel The current Channel being rendered
+ * 
+ * @returns {ReactElement} The ChatRoom page
+ */
+const ChatRoom: React.FC<ChatRoomProps> = ({ channel }: ChatRoomProps): ReactElement => {
   const { currentUser } = useOutletContext<ContextType>();
   const [inputMsg, setInputMsg] = useState<string>("");
   const [chatLog, setChatLog] = useState<Message[]>([]);
-  const { server_id } = useParams()
-
-
+  const { server_id } = useParams();
 
   const room: string = `servers${server_id}channels${channel.id}`; // Update later to use the channel's name grabbed from request to WSGI
-
+  
+  /**
+   * @description Creates a new WebSocket client that interacts asynchronously with the backend.
+   * The definition is cached with the useMemo hook until the room changes so the client is not
+   * open and closed each time the component re-renders
+   */
   const client: W3CWebSocket = useMemo(
     (): W3CWebSocket => new W3CWebSocket(`ws://0.0.0.0:8000/ws/chat/${room}/`),
     [room]
@@ -40,8 +56,8 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ channel }): ReactElement => {
       const dataFromServer: string = message.data.toString(); // Assuming the server sends stringified JSON
       try {
         const parsedData: Message = JSON.parse(dataFromServer);
-        console.log(parsedData)
-        console.log('update messages')
+        console.log(parsedData);
+        console.log("update messages");
         setChatLog((prevChatLog) => [...prevChatLog, parsedData]);
       } catch (error) {
         console.error("Error parsing message:", error);
@@ -50,44 +66,59 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ channel }): ReactElement => {
   }, [client]);
 
   useEffect((): void => {
-    console.log("Getting messages")
+    console.log("Getting messages");
     const getMessages = async (): Promise<void> => {
       try {
-        const resp: AxiosResponse = await api.get(`servers/${server_id}/channels/${channel.id}/messages/`)
-        console.log(resp.data)
-        setChatLog(resp.data)
+        const resp: AxiosResponse = await api.get(
+          `servers/${server_id}/channels/${channel.id}/messages/`
+        );
+        console.log(resp.data);
+        setChatLog(resp.data);
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
-    }
-    getMessages()
-  }, [])
-
+    };
+    getMessages();
+  }, []);
+  
+  /**
+   * @description Handler for a new message submission. A post request is made to the
+   * synchronous portion of the backend and, if successful, the message is stored for later
+   * retrieval. The message is also posted to the WebSocket, where the asynchronous portion
+   * of the backend receives the message in the channel and sends it to all other clients
+   * that are connected to the channel
+   * 
+   * @param {FormEvent} e The submission FormEvent
+   */
   const handleSend = async (e: FormEvent): Promise<void> => {
     e.preventDefault();
     try {
-      const resp: AxiosResponse = await api.post(`servers/${server_id}/channels/${channel.id}/messages/`, { text: inputMsg, sender: currentUser.displayName })
-      console.log(resp.data)
+      const resp: AxiosResponse = await api.post(
+        `servers/${server_id}/channels/${channel.id}/messages/`,
+        { text: inputMsg, sender: currentUser?.displayName }
+      );
+      console.log(resp.data);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
     const currentUtcDate = new Date();
-    const utcDateInSpecificTimezone = toZonedTime(currentUtcDate, 'Etc/UTC')
+    const utcDateInSpecificTimezone = toZonedTime(currentUtcDate, "Etc/UTC");
 
-    const datetime: string = format(utcDateInSpecificTimezone, "HH:mm - MMMM dd, yyyy")
+    const datetime: string = format(
+      utcDateInSpecificTimezone,
+      "HH:mm - MMMM dd, yyyy"
+    );
 
     client.send(
       JSON.stringify({
         type: "message",
         text: inputMsg,
         sender: currentUser?.displayName,
-        datetime: datetime
+        datetime: datetime,
       })
     );
     setInputMsg("");
   };
-
-
 
   return (
     <>

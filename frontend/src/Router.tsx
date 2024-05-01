@@ -8,6 +8,10 @@ import ServerPage from "./pages/ServerPage";
 import AccountInfo from "./pages/AccountInfo";
 import { userConfirmation } from "./utilities/userUtilities";
 
+/**
+ * @description Creates the router that React Router DOM uses to pass context and
+ * render components in the Single Page Application (SPA)
+ */
 const router = createBrowserRouter([
   {
     path: "/",
@@ -22,7 +26,6 @@ const router = createBrowserRouter([
         path: "server/:server_id/",
         element: <ServerPage />,
       },
-
       {
         path: "*",
         element: <NotFoundPage />,

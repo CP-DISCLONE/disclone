@@ -1,5 +1,4 @@
 import { ReactElement, useEffect, useState } from "react";
-
 import { Channel } from "../types/channelElementTypes";
 import { Button } from "@/components/ui/button";
 import { useParams } from "react-router-dom";
