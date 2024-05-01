@@ -1,26 +1,80 @@
 import { Link, NavigateFunction, useNavigate } from "react-router-dom";
-import React, { FormEvent, ReactElement } from "react";
+import React, { FormEvent, ReactElement, useEffect, useState } from "react";
 import { api } from "../utilities/axiosInstance";
 import { ContextType } from "../types/contextTypes";
+import { AxiosResponse } from "axios";
+import ServerButton from "./ServerButton";
+import { Server } from "../types/serverElementTypes";
+import NewServerModal from "./NewServerModal";
 
+/**
+ * @description The NavBar that displays on the application over each page and displays
+ * the current User's display name and all relevant links to the User's available
+ * servers
+ * 
+ * @param {ContextType} props The props passed in from App to the component
+ * 
+ * @returns {ReactElement} The NavBar component
+ */
 const NavBar: React.FC<ContextType> = ({
   currentUser,
   setCurrentUser,
 }: ContextType): ReactElement => {
+  const [myServers, setMyServers] = useState<Server[]>([])
+  const [newServerName, setNewServerName] = useState<string>("")
   const navigate: NavigateFunction = useNavigate();
 
+  /**
+   * @description The handler for a User's logout request. After successful resolution of the
+   * request, the User's token is cleared from local storage and the backend AxiosInstance
+   * headers and they are navigated to the LandingPage
+   * 
+   * @param {FormEvent} e The submission FormEvent
+   */
   const handleLogOut = async (e: FormEvent): Promise<void> => {
     e.preventDefault();
     try {
       await api.post("users/logout/");
       console.log("Successfully logged out!");
       localStorage.removeItem("token");
+      delete api.defaults.headers.common['Authorization']
       setCurrentUser(null);
       navigate("/");
     } catch (error) {
       console.log("Failed to log out: ", error);
     }
   };
+  /**
+   * @description The handler for creating a new server. After successful resolution of the request the new Server is added to the MyServers state and therefore is rendered on the NavBar
+   * 
+   * @param {FormEvent} e The submission FormEvent
+   */
+  const handleAddServer = async (e: FormEvent): Promise<void> => {
+    e.preventDefault();
+    try {
+      const resp: AxiosResponse = await api.post("servers/", { name: newServerName })
+      console.log("Successfully created server.")
+      setMyServers([...myServers, resp.data])
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    /**
+     * @description Makes a request to get any servers associated to the user. After resolution of the request, the servers are added tot he MyServers state and therefore are rendered on the NavBar
+     */
+    const getServers = async (): Promise<void> => {
+      try {
+        const resp: AxiosResponse = await api.get("servers/");
+        console.log('loading servers')
+        setMyServers(resp.data)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    getServers()
+  }, [])
 
   return (
     <>
@@ -33,30 +87,13 @@ const NavBar: React.FC<ContextType> = ({
             />
           </div>
           <ul className="absolute left-0 top-16 flex h-dvh w-full flex-col items-center justify-start border-b border-border-primary bg-white px-[5%] pt-4 lg:static lg:flex lg:h-auto lg:w-auto lg:flex-row lg:justify-center lg:border-none lg:px-0 lg:pt-0">
-            <li className="w-full lg:w-auto">
-              <Link
-                to="chatroom/"
-                className="relative block py-3 text-center text-md ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-primary focus-visible:ring-offset-2 lg:px-4 lg:py-2 lg:text-base"
-              >
-                Enter Chat Room
-              </Link>
-            </li>
-            <li className="w-full lg:w-auto">
-              <a
-                href="#"
-                className="relative block py-3 text-center text-md ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-primary focus-visible:ring-offset-2 lg:px-4 lg:py-2 lg:text-base"
-              >
-                About
-              </a>
-            </li>
-            <li className="w-full lg:w-auto">
-              <a
-                href="#"
-                className="relative block py-3 text-center text-md ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-primary focus-visible:ring-offset-2 lg:px-4 lg:py-2 lg:text-base"
-              >
-                Link Three
-              </a>
-            </li>
+            <li> <NewServerModal
+              handleAddServer={handleAddServer}
+              newServerName={newServerName}
+              setNewServerName={setNewServerName}
+            /></li>
+            {myServers ? myServers.map((server, idx) => <li key={idx}><ServerButton server={server} /></li>) : null}
+
             <li className="w-full lg:w-auto">
               <div>
                 <button className="flex w-full items-center justify-center gap-2 py-3 text-center text-md ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-primary focus-visible:ring-offset-2 lg:w-auto lg:flex-none lg:justify-start lg:gap-2 lg:px-4 lg:py-2 lg:text-base">
@@ -107,7 +144,7 @@ const NavBar: React.FC<ContextType> = ({
             </button>
           </div>
         </div>
-      </nav>
+      </nav >
     </>
   );
 };
