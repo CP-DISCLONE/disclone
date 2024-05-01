@@ -29,9 +29,9 @@ const ChannelPage: React.FC<ChannelPageProps> = ({
         }
     }
     return (
-        <div className='flex flex-row w-full transform hover:scale-110 bg-red-100 text-black p-4'>
+        <div className='flex flex-row w-full bg-red-100 text-black p-4'>
             <p>{channel.name}</p>
-            <Button onClick={handleDeleteChannel}>X</Button>
+            <Button className="transform hover:scale-110" onClick={handleDeleteChannel}>X</Button>
         </div>
 
     )
