@@ -4,10 +4,23 @@ import { AxiosResponse } from "axios";
 import { api } from "../utilities/axiosInstance";
 import { ContextType } from "../types/contextTypes";
 
+/**
+ * @description The page that displays a User's account information and affords them
+ * the opportunity to change their display name
+ * 
+ * @returns {ReactElement} The AccountInfo page
+ */
 const AccountInfo: React.FC = (): ReactElement => {
   const { currentUser, setCurrentUser } = useOutletContext<ContextType>();
   const [inputDisplayName, setInputDisplayName] = useState<string>("");
 
+  /**
+   * @description The handler for a User's display name update submission. Upon
+   * successful resolution of the request, the User's state is updated with their
+   * new display name.
+   * 
+   * @param {FormEvent} e The submission FormEvent
+   */
   const handleSubmitInfo = async (e: FormEvent): Promise<void> => {
     e.preventDefault();
     try {
