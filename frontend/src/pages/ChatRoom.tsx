@@ -55,11 +55,18 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ channel }: ChatRoomProps): ReactEle
   useEffect(scrollToBottom, [chatLog]);
 
   // This useEffect handles opening the websocket and receiving messages
-  useEffect((): void => {
+  useEffect(() => {
     // Confirms we are connected to websocket
     client.onopen = (): void => {
       console.log("WebSocket Client Connected");
     };
+
+    client.onclose = (): void => {
+      
+      console.log("WebSocket Client Disconnected");
+      
+
+    }
 
     // accepts broadcast and updates messages on page
     client.onmessage = (message: IMessageEvent): void => {
@@ -73,7 +80,12 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ channel }: ChatRoomProps): ReactEle
         console.error("Error parsing message:", error);
       }
     };
+    return () => {
+      client.close(); // Close WebSocket connection
+    };
   }, [client]);
+
+
 
   useEffect((): void => {
     console.log("Getting messages");
