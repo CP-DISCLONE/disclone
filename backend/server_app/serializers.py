@@ -82,7 +82,6 @@ class ServerSerializer(ModelSerializer):
     """
 
     channels = ChannelOnlySerializer(many=True, read_only=True)
-    admin = UserSerializer(read_only=True)
 
     class Meta:
         # Meta class that provides the model and fields to be serialized.

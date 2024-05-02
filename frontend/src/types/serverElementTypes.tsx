@@ -10,6 +10,6 @@
 export interface Server {
     id: number;
     name: string;
-    admin: { display_name: string };
+    admin: number;
     users: number[];
 }

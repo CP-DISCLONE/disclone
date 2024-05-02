@@ -8,7 +8,6 @@ import ChatRoom from "./ChatRoom";
 import NewChannelModal from "../components/NewChannelModal";
 import LeaveServerModal from "../components/LeaveServerModal";
 import { ContextType } from "@/types/contextTypes";
-import { Server } from "@/types/serverElementTypes";
 
 
 
@@ -22,7 +21,6 @@ const ServerPage: React.FC = (): ReactElement => {
   const [myChannels, setMyChannels] = useState<Channel[]>([]);
   const [currentChannel, setCurrentChannel] = useState<Channel | null>(null);
   const [newChannelName, setNewChannelName] = useState<string>("");
-  const [myServer, setMyServer] = useState<Server | null>(null)
   const { server_id = "" } = useParams<string>();
   const [selectedChannel, setSelectedChannel] = useState<Channel | null>(null);
   const { myServers, setMyServers }: ContextType = useOutletContext()
@@ -74,7 +72,6 @@ const ServerPage: React.FC = (): ReactElement => {
         );
         console.log("getting server/channels");
         setMyChannels(resp.data.channels);
-        setMyServer(resp.data)
       } catch (error) {
         console.log(error);
       }
@@ -86,7 +83,6 @@ const ServerPage: React.FC = (): ReactElement => {
     <>
       <div className="m-4">
         <p>Server ID: {server_id}</p>
-        {myServer ? <p>Server Owner: {myServer.admin['display_name']} (Only the server owner has the ability to create/delete channels.)</p> : null}
         <h1>Your Channels</h1>
         <p></p>
         <div className="flex m-4 gap-4 items-center ">
