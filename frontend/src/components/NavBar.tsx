@@ -105,13 +105,13 @@ const NavBar: React.FC<ContextType> = ({
 
   return (
     <>
-      <nav className="flex w-full items-center border-b border-black bg-white px-[5%] ">
-        <div className="mx-2 flex size-full items-center justify-between gap-4 ">
-          <div className="flex min-h-16 flex-shrink-0 items-center">
-            <h1>DISCLONE</h1>
+      <nav className="flex  items-center border-b border-primary-dark mx-4 ">
+        <div className=" flex size-full items-center justify-between gap-4 ">
+          <div className="flex min-h-16 flex-shrink-0 items-center text-xl">
+            <h1>|| DISCLONE || </h1>
           </div>
-          <ul className="flex  w-full flex-col items-center justify-start border-b   pt-4 lg:flex-row lg:justify-center lg:border-none">
-            <li> <ServersMenuModal
+          <ul className="flex flex-row  w-auto items-center justify-start gap-4  ">
+            <li className=""> <ServersMenuModal
               handleAddServer={handleAddServer}
               newServerName={newServerName}
               setNewServerName={setNewServerName}
@@ -128,15 +128,15 @@ const NavBar: React.FC<ContextType> = ({
             </li>
           </ul>
           <div className="justify-center  ">
-            <div className="flex flex-row w-[300] items-center gap-4">
+            <div className="flex flex-row w-[500] items-center gap-4">
               <Link to="account/">
-                <button className="border border-slate-800 p-2 rounded-md ">
-                  {currentUser ? currentUser.displayName : null}
+                <button className="w-auto rounded-md bg-foreground text-primary-dark p-2 transform hover:scale-110 ">
+                  Welcome: {currentUser ? currentUser.displayName : null}
                 </button>
               </Link>
               {currentUser ? (
                 <button
-                  className="border border-slate-800 p-2 rounded-md w-[80px] "
+                  className="bg-foreground p-2 rounded-md w-[80px] text-primary-dark transform hover:scale-110"
                   onClick={(e) => {
                     handleLogOut(e);
                   }}

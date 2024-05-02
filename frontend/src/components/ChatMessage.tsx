@@ -58,8 +58,8 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
 
   return (
     <>
-      <div className="flex items-left justify-left bg-slate-200 p-2 m-1 flex-col rounded-md">
-        <div className=" inline-block text-slate-400">{localDateString}: {msg.sender}</div>
+      <div className="flex items-left justify-left bg-background p-2 m-1 flex-col rounded-md">
+        <div className="inline-block text-slate-400 text-sm">{localDateString}: {msg.sender}</div>
         <div key={index} className="">
           {msg.text}
         </div>

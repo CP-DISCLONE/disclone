@@ -61,7 +61,7 @@ const SignupPage: React.FC = (): ReactElement => {
         <div className="relative flex min-h-svh flex-col items-stretch justify-center overflow-auto py-24 lg:pb-24 lg:pt-16">
           <div className="absolute bottom-auto left-0 right-0 top-0 flex h-16 w-full items-center justify-between md:h-18">
             <div>
-              <h1 className="text-xl font-bold">DISCLONE</h1>
+              <h1 className="text-xl">|| DISCLONE ||</h1>
             </div>
             <div className="inline-flex gap-x-1">
               <p className="hidden md:block">Already have an account?</p>
@@ -75,11 +75,11 @@ const SignupPage: React.FC = (): ReactElement => {
           </div>
           <div className="container mb-4 max-w-sm">
             <div className="mb-6 text-center md:mb-8">
-              <h1 className="mb-5 text-5xl font-bold md:mb-6 md:text-7xl lg:text-8xl">
+              <h1 className="mb-5 text-5xl ">
                 Sign Up
               </h1>
               <p className="md:text-md">
-                Lorem ipsum dolor sit amet adipiscing elit.
+                
               </p>
             </div>
             <form

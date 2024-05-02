@@ -144,19 +144,19 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ channel }: ChatRoomProps): ReactEle
     <>
       <div className="">
         <div className="justify-center">
-          <h1 className="text-center text-4xl">Channel: {channel.name}</h1>
-          <div className="grid grid-cols-7 gap-1  h-[700px] justify-center">
-
-            <div className="col-span-2 p-2 m-1 gap-4 flex flex-col text-lg text-gray-400">
+          <h1 className=" text-xl">Selected Channel: {channel.name}</h1>
+          <div className="grid grid-cols-7 gap-1  h-[650px] justify-center">
+           
+            <div className="col-span-2 p-4 m-2 gap-4 flex flex-col text-md text-gray-400 rounded-md bg-primary-dark">
               Users:
-              <div className="overflow-y-auto hover:bg-royalblue-300 p-2 m-1 flex-wrap flex items-center gap-2  border-b-2 ">
-                <div className="bg-slate-200 p-2 m-1  h-[40px] w-[40px] border rounded-full "></div>
-                <p className="text-slate-700 hidden lg:block">BananaSplitz</p>
+              <div className="overflow-y-auto hover:bg-royalblue-300 p-2 m-1 flex-wrap flex items-center gap-2  rounded-md bg-background ">
+                <div className="bg-slate-200 p-2 m-1  h-[40px] w-[40px] border  rounded-full "></div>
+                <p className="text-foreground hidden lg:block">BananaSplitz</p>
               </div>
             </div>
             <div className="col-span-5 m-2 flex flex-col">
               {/* Chat messages */}
-              <div className="h-[600px] overflow-y-auto p-4 rounded-md bg-slate-100 flex-col justify-end">
+              <div className="h-[600px] overflow-y-auto p-4 rounded-md bg-primary-dark flex-col justify-end">
                 <ul>
                   {chatLog.map((msg, index) => (
                     <li key={index}>
@@ -171,9 +171,9 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ channel }: ChatRoomProps): ReactEle
                 onSubmit={(e) => {
                   handleSend(e);
                 }}
-                className="container flex gap-2 p-3"
+                className="flex gap-2 py-4"
               >
-                <Button className="">
+                <Button className="bg-primary-dark">
                   Send
                 </Button>
                 <input
@@ -181,7 +181,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ channel }: ChatRoomProps): ReactEle
                   value={inputMsg}
                   onChange={(e) => setInputMsg(e.target.value)}
                   placeholder="Type your message..."
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+                  className="w-full px-4 py-2 rounded-md focus:outline-none border bg-background focus:border-blue-500"
                 />
               </form>
             </div>

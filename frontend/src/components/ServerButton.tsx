@@ -24,7 +24,7 @@ const ServerButton: React.FC<ServerButtonProps> = ({
     // We have to use <a href> tags here because Link won't re-mount the page and therefore won't get the new channels
     <a
       href={`/server/${server.id}/`}
-      className="relative block py-3 text-center text-md ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-primary focus-visible:ring-offset-2 lg:px-4 lg:py-2 lg:text-base"
+      className="flex flex-row px-3 rounded-md text-center text-md border"
     >
       {server.name}
     </a>
