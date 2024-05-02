@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import ChannelPage from "./ChannelPage";
 import ChatRoom from "./ChatRoom";
 import NewChannelModal from "../components/NewChannelModal";
+import LeaveServerModal from "../components/LeaveServerModal";
 
 /**
  * @description Page that displays a Server and all of its related channels
@@ -31,7 +32,7 @@ const ServerPage: React.FC = (): ReactElement => {
    */
   const handleAddChannel = async (e: FormEvent): Promise<void> => {
     e.preventDefault();
-    const resp: AxiosResponse = await api.post(
+    await api.post(
       `/servers/${server_id}/channels/`,
       { name: newChannelName }
     );
@@ -65,7 +66,7 @@ const ServerPage: React.FC = (): ReactElement => {
 
   return (
     <>
-      <h1>Server Page</h1>
+      <h1>Server Page - ID: {server_id}</h1>
       <ul className="w-1/6">
         {myChannels
           ? myChannels.map((channel) => (
@@ -83,6 +84,11 @@ const ServerPage: React.FC = (): ReactElement => {
             handleAddChannel={handleAddChannel}
             newChannelName={newChannelName}
             setNewChannelName={setNewChannelName}
+          />
+        </li>
+        <li>
+          <LeaveServerModal
+            server_id={server_id}
           />
         </li>
       </ul>

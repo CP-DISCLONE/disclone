@@ -45,14 +45,17 @@ class A_server(TokenReq):
     def get(self, request, server_id) -> Response:
         return Response(ServerSerializer(self.get_server(request, server_id)).data, status=HTTP_200_OK)
 
-    def put(self, request, server_id) -> Response:
+    def put(self, request, server_id, method=None) -> Response:
         data = request.data.copy()
-        curr_server = self.get_server(request, server_id)
-        if request.user.id == curr_server.admin.id:
+        print(type(server_id))
+        curr_server = get_object_or_404(Server, id=server_id)
+        print(curr_server)
+        if not method and request.user.id == curr_server.admin.id:
             ser_server = ServerSerializer(curr_server, data=data, partial=True)
             if ser_server.is_valid():
                 ser_server.save()
                 if data.get("admin"):
+                    print('test1')
                     server = get_object_or_404(Server, id=server_id)
                     server.admin = data.get("admin")
                     server.full_clean()
@@ -62,15 +65,25 @@ class A_server(TokenReq):
                         Server, id=server_id), lst_of_channel_ids=data.get("lst_of_channels"))
                 return Response(ser_server.data, status=HTTP_200_OK)
             return Response(ser_server.errors, status=HTTP_400_BAD_REQUEST)
-        else:
+        elif method == 'add':
+            print("test 2")
             curr_user = get_object_or_404(User, id=request.user.id)
-            if request.user.id not in curr_server.users:
-                curr_server.users.append(curr_user.id)
+            curr_server_users = curr_server.users.all()
+            if request.user not in curr_server_users:
+                curr_server.users.add(request.user)
                 curr_server.full_clean()
                 curr_server.save()
                 return Response("Successfully added user", status=HTTP_200_OK)
             else:
                 return Response("User already in server", status=HTTP_400_BAD_REQUEST)
+        elif method == 'subtract':
+            server = get_object_or_404(Server, id=server_id)
+            user = get_object_or_404(User, id=request.user.id)
+            if user in server.users.all():
+                server.users.remove(user)
+                return Response("Successfully removed user", status=HTTP_200_OK)
+            else:
+                return Response("Failed to remove user", HTTP_400_BAD_REQUEST)
 
     def delete(self, request, server_id) -> Response:
         curr_server = self.get_server(request, server_id)

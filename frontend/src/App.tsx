@@ -15,6 +15,11 @@ function App() {
   const [currentUser, setCurrentUser] = useState<User | null>(
     useLoaderData() as User | null
   );
+  const [render, setRender] = useState<boolean>(false)
+
+  const handleRerender = () => {
+    setRender(!render);
+  }
 
   useEffect(() => {
     console.log(`Current User Display Name: ${currentUser?.displayName}`);
@@ -27,9 +32,9 @@ function App() {
       {/* I would like to make it so nav bar is always there, but the buttons on it render based 
       on if current user exists, but it was giving me a type error for now. */}
       {currentUser ? (
-        <NavBar currentUser={currentUser} setCurrentUser={setCurrentUser} />
+        <NavBar currentUser={currentUser} setCurrentUser={setCurrentUser} render={render} />
       ) : null}
-      <Outlet context={{ currentUser, setCurrentUser } satisfies ContextType} />
+      <Outlet context={{ currentUser, setCurrentUser, handleRerender } satisfies ContextType} />
     </>
   );
 }
