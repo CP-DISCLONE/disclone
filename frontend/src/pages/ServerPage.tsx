@@ -17,10 +17,14 @@ const ServerPage: React.FC = (): ReactElement => {
   const [currentChannel, setCurrentChannel] = useState<Channel | null>(null);
   const [newChannelName, setNewChannelName] = useState<string>("");
   const { server_id } = useParams<string>();
+  const [selectedChannel, setSelectedChannel] = useState<Channel | null>(null);
+  
 
   const handleSelectChannel = (channel: Channel): void => {
     setCurrentChannel(channel);
+    setSelectedChannel(channel);
   };
+
 
   /**
    * @description Handler for adding a new channel. Makes a post request to the
@@ -65,8 +69,18 @@ const ServerPage: React.FC = (): ReactElement => {
 
   return (
     <>
-      <h1>Server Page</h1>
-      <ul className="w-1/6">
+      <div className="m-4">
+      <h1>Your Channels</h1>
+      <div className="flex m-4 gap-4 items-center ">
+      <div className="">
+          <NewChannelModal
+            
+            handleAddChannel={handleAddChannel}
+            newChannelName={newChannelName}
+            setNewChannelName={setNewChannelName}
+          />
+      </div>
+        <ul className="flex gap-4">
         {myChannels
           ? myChannels.map((channel) => (
             <li onClick={() => handleSelectChannel(channel)} key={channel.id}>
@@ -74,24 +88,23 @@ const ServerPage: React.FC = (): ReactElement => {
                 channel={channel}
                 myChannels={myChannels}
                 setMyChannels={setMyChannels}
+                isSelected={channel === selectedChannel}
               />
             </li>
           ))
           : null}
-        <li>
-          <NewChannelModal
-            handleAddChannel={handleAddChannel}
-            newChannelName={newChannelName}
-            setNewChannelName={setNewChannelName}
-          />
-        </li>
-      </ul>
+        </ul>
+      </div>
+          
+     
+      
 
       {currentChannel ? (
         <ChatRoom key={currentChannel.id} channel={currentChannel} />
       ) : (
         <div>Please select a channel</div>
       )}
+      </div>
     </>
   );
 };
