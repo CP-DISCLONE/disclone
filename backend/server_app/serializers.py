@@ -1,6 +1,7 @@
 from rest_framework.serializers import ModelSerializer, SerializerMethodField, DateTimeField
 from .models import Server, Channel, Message
 from user_app.models import User
+from user_app.serializers import UserSerializer
 
 
 class GetMessageSerializer(ModelSerializer):
@@ -80,7 +81,8 @@ class ServerSerializer(ModelSerializer):
         ModelSerializer (class): The rest_framework ModelSerializer class.
     """
 
-    channels = ChannelSerializer(many=True, read_only=True)
+    channels = ChannelOnlySerializer(many=True, read_only=True)
+    admin = UserSerializer(read_only=True)
 
     class Meta:
         # Meta class that provides the model and fields to be serialized.
