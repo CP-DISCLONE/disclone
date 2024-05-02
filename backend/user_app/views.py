@@ -1,6 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
+from django.http import HttpRequest
 from rest_framework.authtoken.models import Token
 from rest_framework.status import (
     HTTP_200_OK,
@@ -16,17 +17,50 @@ from .models import User
 
 
 class TokenReq(APIView):
+    """A class that defines the required authentication and permission classes for access to a class's methods.
+
+    This class ensures that any class that inherits it not only inherits all functionality from the
+    APIView class, but also the permissions and authentication required to access the methods within
+    the class.
+
+    Args:
+        APIView (class): The rest_framework APIView class.
+    """
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
 
 class Info (TokenReq):
-    def get(self, request) -> Response:
+    """The view that holds the methods to grab or update a User's information.
+
+    Args:
+        TokenReq (class): Permissions and base class to create the view.
+    """
+
+    def get(self, request: HttpRequest) -> Response:
+        """Gets a User's relevant information and returns it to the frontend.
+
+        Args:
+            request (HttpRequest): The request from the frontend with proper authorization header.
+
+        Returns:
+            Response: The rest_framework HTTP response with data and proper status code.
+        """
+
         data = {"email": request.user.email, "display_name": request.user.display_name,
                 "first_name": request.user.first_name, "last_name": request.user.last_name}
         return Response(data, status=HTTP_200_OK)
 
-    def put(self, request) -> Response:
+    def put(self, request: HttpRequest) -> Response:
+        """Updates a User's display name or profile picture and returns the User's information to the frontend.
+
+        Args:
+            request (HttpRequest): The request from the frontend with new data and proper authorization header.
+
+        Returns:
+            Response: The rest_framework HTTP response with data and proper status code.
+        """
+
         data = request.data.copy()
         user = User.objects.get(username=request.user.email)
         if data.get("display_name") and "display_name" in data:
@@ -42,7 +76,22 @@ class Info (TokenReq):
 
 
 class Sign_up(APIView):
-    def post(self, request) -> Response:
+    """The view that holds the method for a new User to sign up.
+
+    Args:
+        APIView (class): The rest_framwork APIView class
+    """
+
+    def post(self, request: HttpRequest) -> Response:
+        """Creates a new User, logs them in, and returns their token and information to the frontend.
+
+        Args:
+            request (HttpRequest): The request from the frontend with new data.
+
+        Returns:
+            Response: The rest_framework HTTP response with data and proper status code.
+        """
+
         data = request.data.copy()
         data['username'] = data.get("email")
         new_user = User(**data)
@@ -67,7 +116,22 @@ class Sign_up(APIView):
 
 
 class Log_in(APIView):
-    def post(self, request) -> Response:
+    """The view that holds the method for an existing User to log in.
+
+    Args:
+        APIView (class): The rest_framwork APIView class.
+    """
+
+    def post(self, request: HttpRequest) -> Response:
+        """Logs an existing User into their account.
+
+        Args:
+            request (HttpRequest): The request from the frontend with the data.
+
+        Returns:
+            Response: The rest_framework Response with data and proper status code.
+        """
+
         data = request.data.copy()
         user = authenticate(username=data.get("email"),
                             password=data.get("password"))
@@ -88,7 +152,22 @@ class Log_in(APIView):
 
 
 class Log_out(APIView):
-    def post(self, request):
+    """The view that holds the method for a User to log out.
+
+    Args:
+        APIView (class): The rest_framework APIView class.
+    """
+
+    def post(self, request: HttpRequest) -> Response:
+        """Logs a User out and flushes their current session and token.
+
+        Args:
+            request (HttpRequest): The request from the frontend with proper authorization header.
+
+        Returns:
+            Response: The rest_framework Response with the proper status code.
+        """
+
         request.user.auth_token.delete()
         logout(request)
         _response = Response(status=HTTP_204_NO_CONTENT)

@@ -9,6 +9,7 @@ from .views import (
 )
 
 urlpatterns = [
+     # The routes that map the API endpoints to all server_app views
     path('', All_servers.as_view(), name='all_servers'),
     path('<int:server_id>/', A_server.as_view(), name='a_server'),
     path('<int:server_id>/method/<str:method>/',
