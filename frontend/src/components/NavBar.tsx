@@ -85,10 +85,7 @@ const NavBar: React.FC<ContextType> = ({
       <nav className="flex w-full items-center border-b border-black bg-white px-[5%] ">
         <div className="mx-2 flex size-full items-center justify-between gap-4 ">
           <div className="flex min-h-16 flex-shrink-0 items-center">
-            <img
-              src="https://relume-assets.s3.amazonaws.com/logo-image.svg"
-              alt="Logo image"
-            />
+            <h1>DISCLONE</h1>
           </div>
           <ul className="   flex  w-full flex-col items-center justify-start border-b   pt-4 lg:flex-row lg:justify-center lg:border-none ">
             <li> <NewServerModal

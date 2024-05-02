@@ -55,7 +55,7 @@ const ChannelPage: React.FC<ChannelPageProps> = ({
   };
 
   return (
-    <div className={`flex flex-row w-full p-4 items-center gap-4 transform hover:scale-110 rounded-md  ${isSelected ? 'bg-blue-500' : ' bg-slate-300'}`}>
+    <div className={`flex flex-row w-full p-4 items-center gap-4 transform hover:scale-110 rounded-md  ${isSelected ? 'bg-yellow-300' : ' bg-slate-300'}`}>
       <p>{channel.name}</p>
       <Button
         className="w-[5px] h-[5px] "
@@ -65,6 +65,7 @@ const ChannelPage: React.FC<ChannelPageProps> = ({
         }}
         
       >
+        -
         
       </Button>
     </div>
