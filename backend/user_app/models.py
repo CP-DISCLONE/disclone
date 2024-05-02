@@ -5,6 +5,11 @@ from .validators import validate_display_name, validate_first_name, validate_las
 
 
 class User(AbstractUser):
+    """The class that holds the application User model.
+
+    Args:
+        AbstractUser (class): Django AbstractUser class
+    """
     email = models.EmailField(
         unique=True, verbose_name='Email Address', max_length=255)
     display_name = models.CharField(max_length=25, validators=[
@@ -21,5 +26,6 @@ class User(AbstractUser):
     # owned_channels: set by moderators field of Channel if user is a moderator of a channel
     # messages: set by sender field of Message model
 
+    # Sets the username to the User's email by default
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = [display_name, first_name, last_name]
