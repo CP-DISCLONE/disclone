@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, FormEvent, ReactElement } from "react";
+import { useState, useEffect, useMemo, FormEvent, ReactElement, useRef } from "react";
 import ChatMessage from "../components/ChatMessage";
 import { w3cwebsocket as W3CWebSocket, IMessageEvent } from "websocket";
 import { Message } from "../types/chatElementTypes";
@@ -8,6 +8,7 @@ import { api } from "../utilities/axiosInstance";
 import { AxiosResponse } from "axios";
 import { format, toZonedTime } from "date-fns-tz";
 import { Channel } from "../types/channelElementTypes";
+import { Button } from "@/components/ui/button";
 
 /**
  * @description The interface that defines the incoming props from the ServerPage
@@ -31,9 +32,10 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ channel }: ChatRoomProps): ReactEle
   const [inputMsg, setInputMsg] = useState<string>("");
   const [chatLog, setChatLog] = useState<Message[]>([]);
   const { server_id } = useParams();
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const room: string = `servers${server_id}channels${channel.id}`; // Update later to use the channel's name grabbed from request to WSGI
-  
+
   /**
    * @description Creates a new WebSocket client that interacts asynchronously with the backend.
    * The definition is cached with the useMemo hook until the room changes so the client is not
@@ -44,12 +46,25 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ channel }: ChatRoomProps): ReactEle
     [room]
   );
 
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(scrollToBottom, [chatLog]);
+
   // This useEffect handles opening the websocket and receiving messages
-  useEffect((): void => {
+  useEffect(() => {
     // Confirms we are connected to websocket
     client.onopen = (): void => {
       console.log("WebSocket Client Connected");
     };
+
+    client.onclose = (): void => {
+
+      console.log("WebSocket Client Disconnected");
+
+
+    }
 
     // accepts broadcast and updates messages on page
     client.onmessage = (message: IMessageEvent): void => {
@@ -63,7 +78,12 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ channel }: ChatRoomProps): ReactEle
         console.error("Error parsing message:", error);
       }
     };
+    return () => {
+      client.close(); // Close WebSocket connection
+    };
   }, [client]);
+
+
 
   useEffect((): void => {
     console.log("Getting messages");
@@ -80,7 +100,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ channel }: ChatRoomProps): ReactEle
     };
     getMessages();
   }, []);
-  
+
   /**
    * @description Handler for a new message submission. A post request is made to the
    * synchronous portion of the backend and, if successful, the message is stored for later
@@ -124,8 +144,9 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ channel }: ChatRoomProps): ReactEle
     <>
       <div className="">
         <div className="justify-center">
-          <h1 className="text-center text-4xl">{channel.name}</h1>
-          <div className="grid grid-cols-8 gap-1  h-[800px]">
+          <h1 className="text-center text-4xl">Channel: {channel.name}</h1>
+          <div className="grid grid-cols-7 gap-1  h-[700px] justify-center">
+
             <div className="col-span-2 p-2 m-1 gap-4 flex flex-col text-lg text-gray-400">
               Users:
               <div className="overflow-y-auto hover:bg-royalblue-300 p-2 m-1 flex-wrap flex items-center gap-2  border-b-2 ">
@@ -133,15 +154,16 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ channel }: ChatRoomProps): ReactEle
                 <p className="text-slate-700 hidden lg:block">BananaSplitz</p>
               </div>
             </div>
-            <div className="col-span-5   m-2  flex flex-col justify-between">
+            <div className="col-span-5 m-2 flex flex-col">
               {/* Chat messages */}
-              <div className="h-[720px] overflow-y-auto p-4 rounded-md bg-slate-100 flex-col justify-end">
+              <div className="h-[600px] overflow-y-auto p-4 rounded-md bg-slate-100 flex-col justify-end">
                 <ul>
                   {chatLog.map((msg, index) => (
                     <li key={index}>
                       <ChatMessage msg={msg} index={index} />
                     </li>
                   ))}
+                  <div ref={messagesEndRef} />
                 </ul>
               </div>
 
@@ -151,9 +173,9 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ channel }: ChatRoomProps): ReactEle
                 }}
                 className="container flex gap-2 p-3"
               >
-                <button className="bg-royalblue-800 text-white px-3 rounded-md ml-1">
+                <Button className="">
                   Send
-                </button>
+                </Button>
                 <input
                   type="text"
                   value={inputMsg}

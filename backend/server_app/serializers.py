@@ -40,7 +40,8 @@ class ChannelOnlySerializer(ModelSerializer):
 
 
 class ServerSerializer(ModelSerializer):
-    channels = ChannelSerializer(many=True, read_only=True)
+    channels = ChannelOnlySerializer(many=True, read_only=True)
+    admin = UserSerializer(read_only=True)
 
     class Meta:
         model = Server

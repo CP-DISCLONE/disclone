@@ -6,11 +6,12 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import React, { FormEvent, ReactElement } from "react";
+import React, { ReactElement } from "react";
 import { Button } from "./ui/button";
 import { api } from "@/utilities/axiosInstance";
 import { useNavigate } from "react-router-dom";
 import { AxiosResponse } from "axios";
+import { Server } from "@/types/serverElementTypes";
 
 /**
  * @description The interface that defines the props passed down to the Modal from the
@@ -21,7 +22,8 @@ import { AxiosResponse } from "axios";
  */
 interface LeaveServerModalProps {
     server_id: string;
-    handleRerender: () => void;
+    myServers: Server[];
+    setMyServers: (myServer: Server[]) => void;
 }
 
 
@@ -34,7 +36,8 @@ interface LeaveServerModalProps {
  */
 const LeaveServerModal: React.FC<LeaveServerModalProps> = ({
     server_id,
-    handleRerender
+    myServers,
+    setMyServers
 }: LeaveServerModalProps): ReactElement => {
     const navigate = useNavigate()
 
@@ -44,7 +47,8 @@ const LeaveServerModal: React.FC<LeaveServerModalProps> = ({
             console.log(server_id);
             const resp: AxiosResponse = await api.put(`servers/${server_id}/method/subtract/`)
             console.log(resp.data)
-            handleRerender();
+            const filteredServers = myServers.filter(server => server.id !== Number(server_id));
+            setMyServers(filteredServers)
             navigate('/');
         } catch (error) {
             console.log(error)

@@ -4,6 +4,7 @@ import { Outlet, useLoaderData } from "react-router-dom";
 import NavBar from "./components/NavBar";
 import { User } from "./types/userTypes";
 import { ContextType } from "./types/contextTypes";
+import { Server } from "./types/serverElementTypes";
 
 /**
  * @description The main App component that renders all pages and components within the
@@ -15,11 +16,8 @@ function App() {
   const [currentUser, setCurrentUser] = useState<User | null>(
     useLoaderData() as User | null
   );
-  const [render, setRender] = useState<boolean>(false)
+  const [myServers, setMyServers] = useState<Server[]>([]);
 
-  const handleRerender = () => {
-    setRender(!render);
-  }
 
   useEffect(() => {
     console.log(`Current User Display Name: ${currentUser?.displayName}`);
@@ -32,9 +30,9 @@ function App() {
       {/* I would like to make it so nav bar is always there, but the buttons on it render based 
       on if current user exists, but it was giving me a type error for now. */}
       {currentUser ? (
-        <NavBar currentUser={currentUser} setCurrentUser={setCurrentUser} render={render} />
+        <NavBar currentUser={currentUser} setCurrentUser={setCurrentUser} myServers={myServers} setMyServers={setMyServers} />
       ) : null}
-      <Outlet context={{ currentUser, setCurrentUser, handleRerender } satisfies ContextType} />
+      <Outlet context={{ currentUser, setCurrentUser, myServers, setMyServers } satisfies ContextType} />
     </>
   );
 }
