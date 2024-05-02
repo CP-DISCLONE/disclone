@@ -37,7 +37,7 @@ const NewChannelModal: React.FC<NewChannelModalProps> = ({
 }: NewChannelModalProps): ReactElement => {
   return (
     <Dialog>
-      <DialogTrigger className="justify-center border p-4 rounded-md bg-slate-400 transform hover:scale-110">
+      <DialogTrigger className="justify-center p-4 rounded-md bg-popover-dark transform hover:scale-110">
       <img src={addcircleImage} alt="Add circle" />
       </DialogTrigger>
       <DialogContent>

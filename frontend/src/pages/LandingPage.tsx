@@ -53,25 +53,25 @@ const LandingPage: React.FC = (): ReactElement => {
         <div className="relative flex min-h-svh flex-col justify-center items-stretch overflow-auto py-24 lg:py-20">
           <div className="absolute bottom-auto left-0 right-0 top-0 flex h-16 w-full items-center justify-between md:h-18">
             <div>
-              <h1 className="text-xl font-bold">DISCLONE</h1>
+              <h1 className="text-lg">|| DISCLONE ||</h1>
             </div>
-            <div className="inline-flex gap-x-1">
+            <div className="inline-flex items-center gap-x-3">
               <p className="hidden md:block">Don't have an account?</p>
               <Link
                 to="signup/"
-                className="underline ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-primary focus-visible:ring-offset-2"
+                className="underline"
               >
-                <Button>Sign Up</Button>
+                <Button className="bg-foreground text-primary">Sign Up</Button>
               </Link>
             </div>
           </div>
           <div className="container max-w-sm">
             <div className="mb-6 text-center md:mb-8">
-              <h1 className="mb-5 text-5xl font-bold md:mb-6 md:text-7xl lg:text-8xl">
+              <h1 className="mb-5 text-5xl ">
                 Log In
               </h1>
               <p className="md:text-md">
-                Lorem ipsum dolor sit amet adipiscing elit.
+          
               </p>
             </div>
             <form
@@ -115,7 +115,7 @@ const LandingPage: React.FC = (): ReactElement => {
                 />
               </div>
               <div className="grid-col-1 grid gap-4">
-                <button className="inline-flex items-center justify-center gap-3 whitespace-nowrap border border-border-primary bg-background-alternative hover:bg-black hover:text-white px-6 py-3 text-text-alternative ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-primary focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50">
+                <button className="text-primary-dark inline-flex items-center justify-center gap-3 bg-foreground hover:bg-primary-dark hover:text-foreground px-6 py-3 ">
                   Log in
                 </button>
               </div>

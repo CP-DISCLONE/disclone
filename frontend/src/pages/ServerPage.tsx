@@ -70,9 +70,11 @@ const ServerPage: React.FC = (): ReactElement => {
   return (
     <>
       <div className="m-4">
-      <h1>Your Channels</h1>
-      <div className="flex m-4 gap-4 items-center ">
-      <div className="">
+      
+      <div className="flex p-4 my-4 gap-4 items-center rounded-md bg-primary-dark">
+      <h1>Your Channels : </h1>
+      
+      <div className="flex">
           <NewChannelModal
             
             handleAddChannel={handleAddChannel}
@@ -83,7 +85,7 @@ const ServerPage: React.FC = (): ReactElement => {
         <ul className="flex gap-4">
         {myChannels
           ? myChannels.map((channel) => (
-            <li onClick={() => handleSelectChannel(channel)} key={channel.id}>
+            <li onClick={() => handleSelectChannel(channel)} key={channel.id} className="text-primary-dark">
               <ChannelPage
                 channel={channel}
                 myChannels={myChannels}

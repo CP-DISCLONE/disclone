@@ -29,7 +29,7 @@ function App() {
       {currentUser ? (
         <NavBar currentUser={currentUser} setCurrentUser={setCurrentUser} />
       ) : null}
-      <Outlet context={{ currentUser, setCurrentUser } satisfies ContextType} />
+      <Outlet context={{ currentUser, setCurrentUser } satisfies ContextType}  />
     </>
   );
 }
