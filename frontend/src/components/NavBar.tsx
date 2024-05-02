@@ -5,6 +5,7 @@ import { ContextType } from "../types/contextTypes";
 import { AxiosResponse } from "axios";
 import ServerButton from "./ServerButton";
 import { Server } from "../types/serverElementTypes";
+import NewServerModal from "./NewServerModal";
 
 /**
  * @description The NavBar that displays on the application over each page and displays
@@ -20,6 +21,7 @@ const NavBar: React.FC<ContextType> = ({
   setCurrentUser,
 }: ContextType): ReactElement => {
   const [myServers, setMyServers] = useState<Server[]>([])
+  const [newServerName, setNewServerName] = useState<string>("")
   const navigate: NavigateFunction = useNavigate();
 
   /**
@@ -42,8 +44,26 @@ const NavBar: React.FC<ContextType> = ({
       console.log("Failed to log out: ", error);
     }
   };
+  /**
+   * @description The handler for creating a new server. After successful resolution of the request the new Server is added to the MyServers state and therefore is rendered on the NavBar
+   * 
+   * @param {FormEvent} e The submission FormEvent
+   */
+  const handleAddServer = async (e: FormEvent): Promise<void> => {
+    e.preventDefault();
+    try {
+      const resp: AxiosResponse = await api.post("servers/", { name: newServerName })
+      console.log("Successfully created server.")
+      setMyServers([...myServers, resp.data])
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   useEffect(() => {
+    /**
+     * @description Makes a request to get any servers associated to the user. After resolution of the request, the servers are added tot he MyServers state and therefore are rendered on the NavBar
+     */
     const getServers = async (): Promise<void> => {
       try {
         const resp: AxiosResponse = await api.get("servers/");
@@ -67,6 +87,11 @@ const NavBar: React.FC<ContextType> = ({
             />
           </div>
           <ul className="absolute left-0 top-16 flex h-dvh w-full flex-col items-center justify-start border-b border-border-primary bg-white px-[5%] pt-4 lg:static lg:flex lg:h-auto lg:w-auto lg:flex-row lg:justify-center lg:border-none lg:px-0 lg:pt-0">
+            <li> <NewServerModal
+              handleAddServer={handleAddServer}
+              newServerName={newServerName}
+              setNewServerName={setNewServerName}
+            /></li>
             {myServers ? myServers.map((server, idx) => <li key={idx}><ServerButton server={server} /></li>) : null}
 
             <li className="w-full lg:w-auto">
@@ -119,7 +144,7 @@ const NavBar: React.FC<ContextType> = ({
             </button>
           </div>
         </div>
-      </nav>
+      </nav >
     </>
   );
 };
