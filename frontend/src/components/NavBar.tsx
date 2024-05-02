@@ -5,11 +5,7 @@ import { ContextType } from "../types/contextTypes";
 import { AxiosResponse } from "axios";
 import ServerButton from "./ServerButton";
 import { Server } from "../types/serverElementTypes";
-import NewServerModal from "./NewServerModal";
-
-import { badgeVariants } from "@/components/ui/badge"
-
-
+import ServersMenuModal from "./ServersMenuModal";
 
 /**
  * @description The NavBar that displays on the application over each page and displays
@@ -20,12 +16,16 @@ import { badgeVariants } from "@/components/ui/badge"
  * 
  * @returns {ReactElement} The NavBar component
  */
+
 const NavBar: React.FC<ContextType> = ({
   currentUser,
   setCurrentUser,
+  myServers,
+  setMyServers
 }: ContextType): ReactElement => {
-  const [myServers, setMyServers] = useState<Server[]>([])
-  const [newServerName, setNewServerName] = useState<string>("")
+
+  const [newServerName, setNewServerName] = useState<string>("");
+  const [joinServerID, setJoinServerID] = useState<string>("");
   const navigate: NavigateFunction = useNavigate();
 
   /**
@@ -56,13 +56,36 @@ const NavBar: React.FC<ContextType> = ({
   const handleAddServer = async (e: FormEvent): Promise<void> => {
     e.preventDefault();
     try {
-      const resp: AxiosResponse = await api.post("servers/", { name: newServerName })
-      console.log("Successfully created server.")
-      setMyServers([...myServers, resp.data])
+      const resp: AxiosResponse = await api.post("servers/", { name: newServerName });
+      if (resp.status === 201) {
+        const newServer: Server = { id: resp.data["id"], name: resp.data["name"], admin: resp.data["admin"], users: resp.data["users"] }
+        console.log("Successfully created server.");
+        setMyServers([...myServers, newServer]);
+      }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   }
+
+  /**
+   * @description The handler for joining an existing server. After successful resolution of the request the newly joined Server is added to the MyServers state and therefore is rendered on the NavBar
+   * 
+   * @param {FormEvent} e The submission FormEvent
+   */
+  const handleJoinServer = async (e: FormEvent): Promise<void> => {
+    e.preventDefault();
+    try {
+      await api.put(`servers/${joinServerID}/method/add/`);
+      console.log("Successfully joined server.");
+      const resp: AxiosResponse = await api.get("servers/");
+      console.log(resp.data);
+      setMyServers(resp.data);
+      console.log('updated servers!');
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
 
   useEffect(() => {
     /**
@@ -88,16 +111,19 @@ const NavBar: React.FC<ContextType> = ({
             <h1>|| DISCLONE || </h1>
           </div>
           <ul className="flex flex-row  w-auto items-center justify-start gap-4  ">
-            <li className=""> <NewServerModal
+            <li className=""> <ServersMenuModal
               handleAddServer={handleAddServer}
               newServerName={newServerName}
               setNewServerName={setNewServerName}
+              handleJoinServer={handleJoinServer}
+              joinServerID={joinServerID}
+              setJoinServerID={setJoinServerID}
             /></li>
             {myServers ? myServers.map((server, idx) => <li key={idx}><ServerButton server={server} /></li>) : null}
 
             <li className=" ">
               <div>
-               
+
               </div>
             </li>
           </ul>
@@ -119,7 +145,7 @@ const NavBar: React.FC<ContextType> = ({
                 </button>
               ) : null}
             </div>
-           
+
           </div>
         </div>
       </nav >

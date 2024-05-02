@@ -56,7 +56,7 @@ const NewChannelModal: React.FC<NewChannelModalProps> = ({
                   setNewChannelName(e.target.value);
                 }}
               />
-              <input type="submit" value="Add Server" />
+              <input type="submit" value="Add Channel" />
             </form>
           </DialogDescription>
         </DialogHeader>
