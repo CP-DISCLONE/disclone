@@ -67,66 +67,15 @@ const LandingPage: React.FC = (): ReactElement => {
               </div>
             </div>
             <div className="container max-w-sm">
-              <div className="mb-6 text-center md:mb-8">
-                <h1 className="mb-5 text-5xl ">
-                  Log In
-                </h1>
-                <p className="md:text-md">
-
-                </p>
-              </div>
-              <form
-                onSubmit={(e) => {
-                  handleLogin(e);
-                }}
-                className="grid grid-cols-1 gap-6"
-              >
-                <div className="grid w-full items-center">
-                  <Link
-                    to="signup/">
-
-                    <Button>Sign Up</Button>
-                  </Link>
-                </div>
-                <div className="grid w-full items-center">
-                  <label
-                    className="mb-2 peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    htmlFor="password"
-                  >
-                    Password*
-                  </label>
-                  <input
-                    type="password"
-                    className="flex size-full min-h-11 border border-border-primary bg-background-primary px-3 py-2 align-middle file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-neutral focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-                    id="password"
-                    value={inputPassword}
-                    onChange={(e) => {
-                      setInputPassword(e.target.value);
-                    }}
-                  />
-                </div>
-                <div className="grid-col-1 grid gap-4">
-                  <button className="text-primary-dark inline-flex items-center justify-center gap-3 bg-foreground hover:bg-primary-dark hover:text-foreground px-6 py-3 ">
-                    Log in
-                  </button>
-                </div>
-              </form>
-              <div className="mt-5 w-full text-center md:mt-6">
-                <a
-                  href="#"
-                  className="underline ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-primary focus-visible:ring-offset-2"
-                >
-                  Forgot your password?
-                </a>
-              </div>
+              
+           
+            
               <div className="container max-w-sm">
                 <div className="mb-6 text-center md:mb-8">
                   <h1 className="mb-5 text-5xl font-bold md:mb-6 md:text-7xl lg:text-8xl">
                     Log In
                   </h1>
-                  <p className="md:text-md">
-                    Lorem ipsum dolor sit amet adipiscing elit.
-                  </p>
+               
                 </div>
                 <form
                   onSubmit={(e) => {
