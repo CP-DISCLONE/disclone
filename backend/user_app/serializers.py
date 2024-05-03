@@ -12,4 +12,5 @@ class UserSerializer(ModelSerializer):
     class Meta:
         # Meta class that provides the model and fields to be serialized.
         model = User
-        fields = ['display_name']
+        fields = ['email', 'display_name', 'first_name',
+                  'last_name', 'profile_picture']

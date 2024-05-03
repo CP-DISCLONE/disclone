@@ -14,6 +14,8 @@ from rest_framework.permissions import IsAuthenticated
 from django.core.exceptions import ValidationError
 from django.contrib.auth import authenticate, login, logout
 from .models import User
+import base64
+from django.core.files.base import ContentFile
 
 
 class TokenReq(APIView):
@@ -46,9 +48,9 @@ class Info (TokenReq):
         Returns:
             Response: The rest_framework HTTP response with data and proper status code.
         """
-
+        profile_picture_url = request.user.profile_picture.url if request.user.profile_picture else None
         data = {"email": request.user.email, "display_name": request.user.display_name,
-                "first_name": request.user.first_name, "last_name": request.user.last_name}
+                "first_name": request.user.first_name, "last_name": request.user.last_name, "profile_picture": profile_picture_url}
         return Response(data, status=HTTP_200_OK)
 
     def put(self, request: HttpRequest) -> Response:
@@ -63,13 +65,30 @@ class Info (TokenReq):
 
         data = request.data.copy()
         user = User.objects.get(username=request.user.email)
-        if data.get("display_name") and "display_name" in data:
-            user.display_name = data.get("display_name")
+
+        # Update display name if provided and not empty
+        if "display_name" in data and data["display_name"]:
+            user.display_name = data["display_name"]
+
+        # Update profile picture if provided
+        if "profile_picture" in data:
+            profile_picture = data["profile_picture"]
+            # Decode base64 string to binary image data
+            binary_data = base64.b64decode(profile_picture)
+            # Create a ContentFile object from the binary data
+            profile_picture = ContentFile(
+                binary_data, name="profile_picture.jpg")
+            user.profile_picture.save("profile_picture.jpg", profile_picture)
+
         try:
             user.full_clean()
             user.save()
-            user_data = {"email": request.user.email, "display_name": request.user.display_name,
-                         "first_name": request.user.first_name, "last_name": request.user.last_name}
+            user_data = {
+                "email": request.user.email,
+                "display_name": request.user.display_name,
+                "first_name": request.user.first_name,
+                "last_name": request.user.last_name
+            }
             return Response(user_data, status=HTTP_200_OK)
         except ValidationError as e:
             return Response(e.message_dict, status=HTTP_400_BAD_REQUEST)

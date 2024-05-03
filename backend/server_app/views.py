@@ -116,7 +116,13 @@ class A_server(TokenReq):
 
             server_data = ServerSerializer(server).data
             admin_data = UserSerializer(admin_user).data
-            users_data = [UserSerializer(user).data for user in users]
+            users_data = []
+
+            # Serialize each user and add profile picture URL
+            for user in users:
+                user_data = UserSerializer(user).data
+                user_data['profile_picture_url'] = user.profile_picture.url if user.profile_picture else None
+                users_data.append(user_data)
 
             server_data['admin'] = admin_data
             server_data['users'] = users_data
