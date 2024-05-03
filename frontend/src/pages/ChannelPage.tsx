@@ -30,6 +30,7 @@ const ChannelPage: React.FC<ChannelPageProps> = ({
   channel,
   setMyChannels,
   isSelected,
+
 }: ChannelPageProps): ReactElement => {
   const { server_id } = useParams<string>();
 
@@ -54,6 +55,7 @@ const ChannelPage: React.FC<ChannelPageProps> = ({
     }
   };
 
+
   return (
     <div className={`flex flex-row w-full p-4 items-center gap-4 transform hover:scale-110 rounded-md  ${isSelected ? 'bg-accent-dark' : ' bg-slate-300'}`}>
       <p>{channel.name}</p>
@@ -65,9 +67,9 @@ const ChannelPage: React.FC<ChannelPageProps> = ({
         }}
 
       >
-        
-        
-        
+
+
+
       </Button>
     </div>
   );

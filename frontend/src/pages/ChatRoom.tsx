@@ -11,7 +11,8 @@ import { AxiosResponse } from "axios";
 import { format, toZonedTime } from "date-fns-tz";
 import { Channel } from "../types/channelElementTypes";
 import { Button } from "@/components/ui/button";
-
+import { User } from "@/types/userTypes";
+import UserCard from "@/components/UserCard";
 /**
  * @description The interface that defines the incoming props from the ServerPage
  *
@@ -19,6 +20,7 @@ import { Button } from "@/components/ui/button";
  */
 interface ChatRoomProps {
   channel: Channel;
+  serverUsers: User[];
 }
 
 /**
@@ -29,12 +31,13 @@ interface ChatRoomProps {
  * 
  * @returns {ReactElement} The ChatRoom page
  */
-const ChatRoom: React.FC<ChatRoomProps> = ({ channel }: ChatRoomProps): ReactElement => {
+const ChatRoom: React.FC<ChatRoomProps> = ({ channel, serverUsers }: ChatRoomProps): ReactElement => {
   const { currentUser } = useOutletContext<ContextType>();
   const [inputMsg, setInputMsg] = useState<string>("");
   const [chatLog, setChatLog] = useState<Message[]>([]);
   const { server_id } = useParams();
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
 
   const room: string = `servers${server_id}channels${channel.id}`; // Update later to use the channel's name grabbed from request to WSGI
 
@@ -148,13 +151,10 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ channel }: ChatRoomProps): ReactEle
         <div className="justify-center">
           <h1 className=" text-xl">Selected Channel: {channel.name}</h1>
           <div className="grid grid-cols-7 gap-1  h-[650px] justify-center">
-           
+
             <div className="col-span-2 p-4 m-2 gap-4 flex flex-col text-md text-gray-400 rounded-md bg-primary-dark">
               Users:
-              <div className="overflow-y-auto hover:bg-royalblue-300 p-2 m-1 flex-wrap flex items-center gap-2  rounded-md bg-background ">
-                <div className="bg-slate-200 p-2 m-1  h-[40px] w-[40px] border  rounded-full "></div>
-                <p className="text-foreground hidden lg:block">BananaSplitz</p>
-              </div>
+              {serverUsers ? serverUsers.map((user, idx) => <UserCard key={idx} user={user} />) : null}
             </div>
             <div className="col-span-5 m-2 flex flex-col">
               {/* Chat messages */}
