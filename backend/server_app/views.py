@@ -11,6 +11,7 @@ from rest_framework.status import (
 import json
 from .models import Server, Channel, Message
 from user_app.models import User
+from user_app.serializers import UserSerializer
 from .serializers import ServerOnlySerializer, ChannelSerializer, MessageSerializer, GetMessageSerializer, ServerSerializer, ChannelOnlySerializer
 from user_app.views import TokenReq
 from datetime import datetime
@@ -53,7 +54,10 @@ class All_servers(TokenReq):
         new_server = ServerSerializer(data=data)
         if new_server.is_valid():
             new_server.save()
-            return Response(new_server.data, status=HTTP_201_CREATED)
+            _response = new_server.data
+            _response['admin'] = UserSerializer(get_object_or_404(User, id=_response['admin'])).data
+            _response['users'] = UserSerializer(get_list_or_404(_response['users'].all()), many=True).data
+            return Response(json.dumps(_response), status=HTTP_201_CREATED)
         return Response(new_server.errors, status=HTTP_400_BAD_REQUEST)
 
 
