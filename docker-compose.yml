@@ -22,47 +22,44 @@ services:
       - ./frontend:/disclone/frontend
       - /disclone/frontend/node_modules
     depends_on:
-      - backend
+      - gunicorn
+      - daphne
   
-  backend:
+  gunicorn:
     build:
       context: ./backend
-      dockerfile: Dockerfile
-    container_name: django
-    command: >
-      bash -c "source /disclone/backend/.venv/bin/activate &&
-               pip uninstall channels -y &&
-               pip install -U channels &&
-               python manage.py makemigrations &&
-               python manage.py migrate &&
-               python manage.py runserver 0.0.0.0:8000"
+      dockerfile: Dockerfile.gunicorn
+    container_name: django_gunicorn
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=disclone_db
       - DEBUG=True
-      - CELERY_BROKER_URL=redis://redis:6379/0
-      - CELERY_RESULT_BACKEND=redis://redis:6379/0
-      - PYTHONPATH=/disclone/backend
     ports:
-      - '8000:8000'
+      - '8001:8001'
+    volumes:
+      - ./backend:/disclone/backend
     depends_on:
       - db
       - redis
-  
-  celery:
+
+  daphne:
     build:
       context: ./backend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.daphne
+    container_name: django_daphne
     environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=disclone_db
       - DEBUG=True
-      - DJANGO_ALLOWED_HOSTS=*
-      - CELERY_BROKER_URL=redis://redis:6379/0
-      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    ports:
+      - '8000:8000'
+    volumes:
+      - ./backend:/disclone/backend
     depends_on:
-      - backend
+      - db
       - redis
-    command: celery -A disclone_proj worker --loglevel=info
   
   redis:
     image: redis:latest

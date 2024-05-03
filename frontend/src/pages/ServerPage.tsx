@@ -8,7 +8,7 @@ import ChatRoom from "./ChatRoom";
 import NewChannelModal from "../components/NewChannelModal";
 import LeaveServerModal from "../components/LeaveServerModal";
 import { ContextType } from "@/types/contextTypes";
-
+import { User } from "@/types/userTypes";
 
 
 
@@ -24,6 +24,8 @@ const ServerPage: React.FC = (): ReactElement => {
   const { server_id = "" } = useParams<string>();
   const [selectedChannel, setSelectedChannel] = useState<Channel | null>(null);
   const { myServers, setMyServers }: ContextType = useOutletContext()
+  const [serverUsers, setServerUsers] = useState<User[]>([])
+  const [admin, setAdmin] = useState<User | null>(null)
 
 
   const handleSelectChannel = (channel: Channel): void => {
@@ -71,6 +73,27 @@ const ServerPage: React.FC = (): ReactElement => {
           `servers/${server_id}/`
         );
         console.log("getting server/channels");
+        console.log(resp.data)
+        const newUsersArr: User[] = []
+        for (const user of resp.data.users) {
+          const userData = {
+            email: user.email,
+            displayName: user.display_name,
+            firstName: user.first_name,
+            lastName: user.last_name
+          }
+          newUsersArr.push(userData)
+        }
+        const newAdmin: User = {
+          email: resp.data.admin.email,
+          displayName: resp.data.admin.display_name,
+          firstName: resp.data.admin.first_name,
+          lastName: resp.data.admin.last_name
+        }
+        setServerUsers(newUsersArr)
+        console.log(newUsersArr)
+        setAdmin(newAdmin)
+        console.log(newAdmin)
         setMyChannels(resp.data.channels);
       } catch (error) {
         console.log(error);
@@ -86,6 +109,7 @@ const ServerPage: React.FC = (): ReactElement => {
 
         <div className="flex p-4 my-4 gap-4 items-center rounded-md bg-primary-dark">
           <p>Server ID: {server_id}</p>
+          {admin ? <p>Server Admin: {admin.displayName}</p> : null}
           <h1>Your Channels : </h1>
 
           <div className="flex">
@@ -102,14 +126,14 @@ const ServerPage: React.FC = (): ReactElement => {
                 <li onClick={() => handleSelectChannel(channel)} key={channel.id} className="text-primary-dark">
                   <ChannelPage
                     channel={channel}
-                    myChannels={myChannels}
                     setMyChannels={setMyChannels}
                     isSelected={channel === selectedChannel}
+
                   />
                 </li>
               ))
               : null}
-            <li className="flex p-4 bg-foreground text-primary-dark rounded-md justify-center items-center"><LeaveServerModal myServers={myServers} setMyServers={setMyServers} server_id={server_id}  /></li>
+            <li className="flex p-4 bg-foreground text-primary-dark rounded-md justify-center items-center"><LeaveServerModal myServers={myServers} setMyServers={setMyServers} server_id={server_id} /></li>
           </ul>
         </div>
 
@@ -125,7 +149,7 @@ const ServerPage: React.FC = (): ReactElement => {
 
 
         {currentChannel ? (
-          <ChatRoom key={currentChannel.id} channel={currentChannel} />
+          <ChatRoom key={currentChannel.id} channel={currentChannel} serverUsers={serverUsers} />
         ) : (
           <div>Please select a channel</div>
         )}

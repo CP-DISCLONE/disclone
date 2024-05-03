@@ -21,7 +21,7 @@ class TextRoomConsumer(AsyncWebsocketConsumer):
         await self.channel_layer.group_add(self.room_group_name, self.channel_name)
         await self.accept()
 
-    async def disconnect(self) -> None:
+    async def disconnect(self, close_code) -> None:
         """Asynchronous method that handles a chat room being closed.
 
         When the socket is disconnected, the room name and group are discarded from the channel layer.
