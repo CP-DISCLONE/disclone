@@ -37,6 +37,8 @@ services:
       - DEBUG=True
     ports:
       - '8001:8001'
+    volumes:
+      - ./backend:/disclone/backend
     depends_on:
       - db
       - redis
@@ -53,6 +55,8 @@ services:
       - DEBUG=True
     ports:
       - '8000:8000'
+    volumes:
+      - ./backend:/disclone/backend
     depends_on:
       - db
       - redis
