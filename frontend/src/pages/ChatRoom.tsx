@@ -9,7 +9,8 @@ import { AxiosResponse } from "axios";
 import { format, toZonedTime } from "date-fns-tz";
 import { Channel } from "../types/channelElementTypes";
 import { Button } from "@/components/ui/button";
-
+import { User } from "@/types/userTypes";
+import UserCard from "@/components/UserCard";
 /**
  * @description The interface that defines the incoming props from the ServerPage
  *
@@ -17,7 +18,7 @@ import { Button } from "@/components/ui/button";
  */
 interface ChatRoomProps {
   channel: Channel;
-  usersIDs: number[];
+  serverUsers: User[];
 }
 
 /**
@@ -28,7 +29,7 @@ interface ChatRoomProps {
  * 
  * @returns {ReactElement} The ChatRoom page
  */
-const ChatRoom: React.FC<ChatRoomProps> = ({ channel, usersIDs }: ChatRoomProps): ReactElement => {
+const ChatRoom: React.FC<ChatRoomProps> = ({ channel, serverUsers }: ChatRoomProps): ReactElement => {
   const { currentUser } = useOutletContext<ContextType>();
   const [inputMsg, setInputMsg] = useState<string>("");
   const [chatLog, setChatLog] = useState<Message[]>([]);
@@ -151,7 +152,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ channel, usersIDs }: ChatRoomProps)
 
             <div className="col-span-2 p-4 m-2 gap-4 flex flex-col text-md text-gray-400 rounded-md bg-primary-dark">
               Users:
-              {usersIDs ? usersIDs.map((user, idx) => <UserCard key={idx} usersIDs={user} />) : null}
+              {serverUsers ? serverUsers.map((user, idx) => <UserCard key={idx} user={user} />) : null}
             </div>
             <div className="col-span-5 m-2 flex flex-col">
               {/* Chat messages */}

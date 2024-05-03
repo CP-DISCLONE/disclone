@@ -59,6 +59,7 @@ const NavBar: React.FC<ContextType> = ({
       const resp: AxiosResponse = await api.post("servers/", { name: newServerName });
       if (resp.status === 201) {
         const newServer: Server = { id: resp.data["id"], name: resp.data["name"], admin: resp.data["admin"], users: resp.data["users"] }
+        console.log(resp.data)
         console.log("Successfully created server.");
         setMyServers([...myServers, newServer]);
       }
@@ -95,6 +96,7 @@ const NavBar: React.FC<ContextType> = ({
       try {
         const resp: AxiosResponse = await api.get("servers/");
         console.log('loading servers')
+        console.log(resp.data)
         setMyServers(resp.data)
       } catch (error) {
         console.log(error)
