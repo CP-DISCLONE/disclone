@@ -1,4 +1,4 @@
-import { Link, NavigateFunction, useNavigate } from "react-router-dom";
+import { Link, NavigateFunction, useNavigate, useParams } from "react-router-dom";
 import React, { FormEvent, ReactElement, useEffect, useState } from "react";
 import { api } from "../utilities/axiosInstance";
 import { ContextType } from "../types/contextTypes";
@@ -6,7 +6,7 @@ import { AxiosResponse } from "axios";
 import ServerButton from "./ServerButton";
 import { Server } from "../types/serverElementTypes";
 import ServersMenuModal from "./ServersMenuModal";
-
+import { Params } from "@/types/ParamsTypes";
 /**
  * @description The NavBar that displays on the application over each page and displays
  * the current User's display name and all relevant links to the User's available
@@ -23,7 +23,7 @@ const NavBar: React.FC<ContextType> = ({
   myServers,
   setMyServers
 }: ContextType): ReactElement => {
-
+  const { server_id } = useParams<Params>()
   const [newServerName, setNewServerName] = useState<string>("");
   const [joinServerID, setJoinServerID] = useState<string>("");
   const navigate: NavigateFunction = useNavigate();
@@ -121,8 +121,12 @@ const NavBar: React.FC<ContextType> = ({
               joinServerID={joinServerID}
               setJoinServerID={setJoinServerID}
             /></li>
-            {myServers ? myServers.map((server, idx) => <li key={idx}><ServerButton server={server} /></li>) : null}
-
+            {/* {myServers ? myServers.map((server, idx) => <li key={idx}><ServerButton server={server} /></li>) : null} */}
+            {myServers ? myServers.map((server, idx) => (
+              <li key={idx} className={server.id === Number(server_id) ? 'bg-accent-dark' : ''}>
+                <ServerButton server={server} />
+              </li>
+            )) : null}
             <li className=" ">
               <div>
 

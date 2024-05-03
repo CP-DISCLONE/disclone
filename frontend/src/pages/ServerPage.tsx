@@ -91,7 +91,9 @@ const ServerPage: React.FC = (): ReactElement => {
           lastName: resp.data.admin.last_name
         }
         setServerUsers(newUsersArr)
+        console.log(newUsersArr)
         setAdmin(newAdmin)
+        console.log(newAdmin)
         setMyChannels(resp.data.channels);
       } catch (error) {
         console.log(error);
@@ -124,7 +126,6 @@ const ServerPage: React.FC = (): ReactElement => {
                 <li onClick={() => handleSelectChannel(channel)} key={channel.id} className="text-primary-dark">
                   <ChannelPage
                     channel={channel}
-                    myChannels={myChannels}
                     setMyChannels={setMyChannels}
                     isSelected={channel === selectedChannel}
 
