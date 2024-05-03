@@ -6,7 +6,8 @@ from rest_framework.status import (
     HTTP_200_OK,
     HTTP_201_CREATED,
     HTTP_204_NO_CONTENT,
-    HTTP_400_BAD_REQUEST
+    HTTP_400_BAD_REQUEST,
+    HTTP_404_NOT_FOUND
 )
 import json
 from .models import Server, Channel, Message
@@ -55,9 +56,11 @@ class All_servers(TokenReq):
         if new_server.is_valid():
             new_server.save()
             _response = new_server.data
-            _response['admin'] = UserSerializer(get_object_or_404(User, id=_response['admin'])).data
-            _response['users'] = UserSerializer(get_list_or_404(_response['users'].all()), many=True).data
-            return Response(json.dumps(_response), status=HTTP_201_CREATED)
+            _response['admin'] = UserSerializer(
+                get_object_or_404(User, id=_response['admin'])).data
+            users_queryset = User.objects.filter(id__in=_response['users'])
+            _response['users'] = UserSerializer(users_queryset, many=True).data
+            return Response(_response, status=HTTP_201_CREATED)
         return Response(new_server.errors, status=HTTP_400_BAD_REQUEST)
 
 
@@ -104,8 +107,23 @@ class A_server(TokenReq):
         Returns:
             Response: The rest_framework HTTP response with data and proper status code.
         """
+        server = self.get_server(request, server_id)
+        if server:
+            admin_user = server.admin  # Admin user is already fetched by the server.admin field
 
-        return Response(ServerSerializer(self.get_server(request, server_id)).data, status=HTTP_200_OK)
+            # Fetch user objects associated with the server
+            users = server.users.all()
+
+            server_data = ServerSerializer(server).data
+            admin_data = UserSerializer(admin_user).data
+            users_data = [UserSerializer(user).data for user in users]
+
+            server_data['admin'] = admin_data
+            server_data['users'] = users_data
+
+            return Response(server_data, status=HTTP_200_OK)
+        else:
+            return Response({"message": "Server not found"}, status=HTTP_404_NOT_FOUND)
 
     def put(self, request: HttpRequest, server_id: int, method: str = None) -> Response:
         """Updates a Server's information.
