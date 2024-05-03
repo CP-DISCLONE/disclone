@@ -1,4 +1,4 @@
-![Logo](./frontend/src/assets/Logo.jpg)
+<img src="./frontend/src/assets/Logo.jpg" width="150px" height="150px"/>
 
 # Disclone
 

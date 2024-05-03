@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useParams } from "react-router-dom";
 import { api } from "@/utilities/axiosInstance";
 import { AxiosResponse } from "axios";
+import React from 'react';
 
 /**
  * @description The interface that defines the Props passed from the ServerPage to the component
@@ -14,6 +15,7 @@ import { AxiosResponse } from "axios";
 interface ChannelPageProps {
   channel: Channel;
   setMyChannels: (myChannels: Channel[]) => void;
+  isSelected: boolean;
 }
 
 /**
@@ -27,8 +29,12 @@ interface ChannelPageProps {
 const ChannelPage: React.FC<ChannelPageProps> = ({
   channel,
   setMyChannels,
+  isSelected,
 }: ChannelPageProps): ReactElement => {
   const { server_id } = useParams<string>();
+
+
+
 
   /**
    * @description The handler for deleting a channel. After successful resolution of the
@@ -49,13 +55,19 @@ const ChannelPage: React.FC<ChannelPageProps> = ({
   };
 
   return (
-    <div className="flex flex-row w-full bg-red-100 text-black p-4">
+    <div className={`flex flex-row w-full p-4 items-center gap-4 transform hover:scale-110 rounded-md  ${isSelected ? 'bg-accent-dark' : ' bg-slate-300'}`}>
       <p>{channel.name}</p>
       <Button
-        className="transform hover:scale-110"
-        onClick={handleDeleteChannel}
+        className="flex w-[5px] h-[5px] bg-red-400 "
+        onClick={() => {
+
+          handleDeleteChannel();
+        }}
+
       >
-        X
+        
+        
+        
       </Button>
     </div>
   );

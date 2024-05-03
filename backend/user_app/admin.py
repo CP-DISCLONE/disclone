@@ -1,5 +1,5 @@
 from django.contrib import admin
 from .models import User
 
-# Register your models here.
+# Registers the User model to the Django Admin site
 admin.site.register([User])

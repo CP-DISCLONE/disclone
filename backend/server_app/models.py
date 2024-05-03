@@ -4,6 +4,12 @@ from django.core import validators as v
 
 
 class Server(models.Model):
+    """The class that holds the application Server model.
+
+    Args:
+        models.Model (class): The django.db Model class.
+    """
+    
     users = models.ManyToManyField(User, related_name="servers")
     admin = models.ForeignKey(
         User, on_delete=models.SET_NULL, related_name="owned_server", null=True)
@@ -13,6 +19,11 @@ class Server(models.Model):
 
 
 class Channel(models.Model):
+    """The class that holds the application Channel model.
+
+    Args:
+        models.Model (class): The django.db Model class.
+    """
     server = models.ForeignKey(
         Server, on_delete=models.CASCADE, related_name='channels')
     moderators = models.ManyToManyField(Server, related_name='owned_channels')
@@ -22,6 +33,11 @@ class Channel(models.Model):
 
 
 class Message(models.Model):
+    """The class that holds the application Message model.
+
+    Args:
+        models.Model (class): The django.db Model class.
+    """
     channel = models.ForeignKey(
         Channel, on_delete=models.CASCADE, related_name='messages')
     sender = models.ForeignKey(
