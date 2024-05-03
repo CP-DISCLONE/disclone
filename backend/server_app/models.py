@@ -12,7 +12,7 @@ class Server(models.Model):
     
     users = models.ManyToManyField(User, related_name="servers")
     admin = models.ForeignKey(
-        User, on_delete=models.SET_NULL, related_name="owned_server", null=True)
+        User, on_delete=models.SET_NULL, related_name="owned_server")
     name = models.CharField(max_length=50, validators=[
                             v.MinLengthValidator(5)])
     # channels[] from associated foreign key relationship from channels model
