@@ -16,6 +16,7 @@ interface ChannelPageProps {
   channel: Channel;
   setMyChannels: (myChannels: Channel[]) => void;
   isSelected: boolean;
+  setCurrentChannel: (currentChannel: Channel | null) => void;
 }
 
 /**
@@ -30,6 +31,7 @@ const ChannelPage: React.FC<ChannelPageProps> = ({
   channel,
   setMyChannels,
   isSelected,
+  setCurrentChannel
 
 }: ChannelPageProps): ReactElement => {
   const { server_id } = useParams<string>();
@@ -43,14 +45,16 @@ const ChannelPage: React.FC<ChannelPageProps> = ({
    * state
    */
   const handleDeleteChannel = async (): Promise<void> => {
-    await api.delete(`/servers/${server_id}/channels/${channel.id}`);
     try {
+      await api.delete(`/servers/${server_id}/channels/${channel.id}`);
       const resp2: AxiosResponse = await api.get(
         `servers/${server_id}/channels/`
       );
       console.log("getting channels");
       setMyChannels(resp2.data);
+      setCurrentChannel(null)
     } catch (error) {
+      alert("Cannot delete channels. You are not the admin of the server.")
       console.log(error);
     }
   };

@@ -61,7 +61,7 @@ const ServerPage: React.FC = (): ReactElement => {
       setNewChannelName("");
     } catch (error) {
       console.log(error);
-      alert("Cannot add Channels. You are not the Owner of the Server.");
+      alert("Cannot add channels. You are not the admin of the server.");
     }
   };
 
@@ -128,6 +128,7 @@ const ServerPage: React.FC = (): ReactElement => {
                     channel={channel}
                     setMyChannels={setMyChannels}
                     isSelected={channel === selectedChannel}
+                    setCurrentChannel={setCurrentChannel}
 
                   />
                 </li>
