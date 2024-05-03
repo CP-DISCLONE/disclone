@@ -1,3 +1,4 @@
+import { Server } from "./serverElementTypes";
 import { User } from "./usertypes";
 
 /**
@@ -10,4 +11,6 @@ import { User } from "./usertypes";
 export interface ContextType {
   currentUser: User | null;
   setCurrentUser: React.Dispatch<React.SetStateAction<User | null>>;
+  myServers: Server[];
+  setMyServers: (myServers: Server[]) => void;
 }
