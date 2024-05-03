@@ -4,8 +4,7 @@ import { w3cwebsocket as W3CWebSocket, IMessageEvent } from "websocket";
 import { Message } from "../types/chatElementTypes";
 import { ContextType } from "../types/contextTypes";
 import { useOutletContext, useParams } from "react-router-dom";
-import { EmojiPicker } from "emoji-picker-react";
-
+import Picker from "emoji-picker-react";
 import { api } from "../utilities/axiosInstance";
 import { AxiosResponse } from "axios";
 import { format, toZonedTime } from "date-fns-tz";
@@ -136,7 +135,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ channel }: ChatRoomProps): ReactEle
         JSON.stringify({
           type: "message",
           text: inputMsg,
-          sender: currentUser?.displayName
+          sender: currentUser?.displayName,
           datetime: datetime,
       }))
     }
