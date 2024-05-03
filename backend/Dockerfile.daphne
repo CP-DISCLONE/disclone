@@ -1,0 +1,16 @@
+FROM python:3.12.3-slim-bullseye
+
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1
+
+WORKDIR /disclone/backend
+
+COPY requirements.txt /disclone/backend/
+RUN pip install -r requirements.txt
+
+RUN pip uninstall channels -y && \
+    pip install -U channels
+
+COPY . /disclone/backend/
+
+CMD ["daphne", "-b", "0.0.0.0", "-p", "8000", "disclone_proj.asgi:application"]
