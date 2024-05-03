@@ -24,6 +24,7 @@ const ServerPage: React.FC = (): ReactElement => {
   const { server_id = "" } = useParams<string>();
   const [selectedChannel, setSelectedChannel] = useState<Channel | null>(null);
   const { myServers, setMyServers }: ContextType = useOutletContext()
+  const [usersIDs, setUsersIDs] = useState<number[]>([])
 
 
   const handleSelectChannel = (channel: Channel): void => {
@@ -71,6 +72,8 @@ const ServerPage: React.FC = (): ReactElement => {
           `servers/${server_id}/`
         );
         console.log("getting server/channels");
+        console.log(resp.data)
+        setUsersIDs(resp.data.users)
         setMyChannels(resp.data.channels);
       } catch (error) {
         console.log(error);
@@ -105,11 +108,12 @@ const ServerPage: React.FC = (): ReactElement => {
                     myChannels={myChannels}
                     setMyChannels={setMyChannels}
                     isSelected={channel === selectedChannel}
+
                   />
                 </li>
               ))
               : null}
-            <li className="flex p-4 bg-foreground text-primary-dark rounded-md justify-center items-center"><LeaveServerModal myServers={myServers} setMyServers={setMyServers} server_id={server_id}  /></li>
+            <li className="flex p-4 bg-foreground text-primary-dark rounded-md justify-center items-center"><LeaveServerModal myServers={myServers} setMyServers={setMyServers} server_id={server_id} /></li>
           </ul>
         </div>
 
@@ -125,7 +129,7 @@ const ServerPage: React.FC = (): ReactElement => {
 
 
         {currentChannel ? (
-          <ChatRoom key={currentChannel.id} channel={currentChannel} />
+          <ChatRoom key={currentChannel.id} channel={currentChannel} usersIDs={usersIDs} />
         ) : (
           <div>Please select a channel</div>
         )}
