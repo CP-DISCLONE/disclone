@@ -122,6 +122,7 @@ class A_server(TokenReq):
             for user in users:
                 user_data = UserSerializer(user).data
                 user_data['profile_picture_url'] = user.profile_picture.url if user.profile_picture else None
+                print(user_data['profile_picture_url'])
                 users_data.append(user_data)
 
             server_data['admin'] = admin_data

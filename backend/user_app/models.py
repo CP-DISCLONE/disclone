@@ -11,8 +11,8 @@ def generate_filename(instance, filename):
     ext = filename.split('.')[-1]
     # Generate a UUID4 filename
     filename = f"{uuid.uuid4()}.{ext}"
-    # Join the filename with the 'profile_pics/' directory
-    return os.path.join('profile_pics', filename)
+    # Join the filename with the 'media/' directory
+    return os.path.join('', filename)
 
 
 class User(AbstractUser):

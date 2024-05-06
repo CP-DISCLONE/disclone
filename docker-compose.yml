@@ -10,7 +10,7 @@ services:
       - POSTGRES_DB=disclone_db
     volumes:
       - postgres_data:/var/lib/postgresql/data/
-  
+
   frontend:
     build:
       context: ./frontend
@@ -24,7 +24,7 @@ services:
     depends_on:
       - gunicorn
       - daphne
-  
+
   gunicorn:
     build:
       context: ./backend
@@ -39,6 +39,7 @@ services:
       - '8001:8001'
     volumes:
       - ./backend:/disclone/backend
+      - media_volume:/disclone/backend/media # Include the media volume here
     depends_on:
       - db
       - redis
@@ -60,12 +61,12 @@ services:
     depends_on:
       - db
       - redis
-  
+
   redis:
     image: redis:latest
     ports:
       - '6379:6379'
 
-
 volumes:
   postgres_data:
+  media_volume: # Define the media_volume here
