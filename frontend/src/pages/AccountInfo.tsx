@@ -32,7 +32,7 @@ const AccountInfo: React.FC = (): ReactElement => {
       console.log("Successfully updated display name.");
       setCurrentUser({
         email: resp.data.email,
-        displayName: inputDisplayName,
+        displayName: resp.data.display_name,
         firstName: resp.data.first_name,
         lastName: resp.data.last_name,
         profilePicture: resp.data.profile_picture

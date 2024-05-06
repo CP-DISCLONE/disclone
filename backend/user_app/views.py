@@ -66,8 +66,9 @@ class Info (TokenReq):
         data = request.data.copy()
         user = User.objects.get(username=request.user.email)
 
-        # Update display name if provided and not empty
+        # Check if display_name is provided and not empty
         if "display_name" in data and data["display_name"]:
+            # Update display name
             user.display_name = data["display_name"]
 
         # Update profile picture if provided
@@ -85,10 +86,10 @@ class Info (TokenReq):
             user.save()
             user_data = {
                 "email": request.user.email,
-                "display_name": request.user.display_name,
+                "display_name": user.display_name,  # Return updated or original display_name
                 "first_name": request.user.first_name,
                 "last_name": request.user.last_name,
-                "profile_picture": user.profile_picture
+                "profile_picture_url": user.profile_picture.url
             }
             return Response(user_data, status=HTTP_200_OK)
         except ValidationError as e:
