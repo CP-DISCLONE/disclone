@@ -99,11 +99,12 @@ const NavBar: React.FC<ContextType> = ({
         console.log(resp.data)
         setMyServers(resp.data)
       } catch (error) {
+        setMyServers([])
         console.log(error)
       }
     }
     getServers()
-  }, [])
+  }, [currentUser])
 
   return (
     <>

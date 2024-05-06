@@ -1,4 +1,4 @@
-import { Link, useOutletContext } from "react-router-dom";
+import { Link, useOutletContext, useNavigate } from "react-router-dom";
 import { FormEvent, useState, ReactElement } from "react";
 import { api } from "../utilities/axiosInstance";
 import { AxiosResponse } from "axios";
@@ -16,6 +16,7 @@ const SignupPage: React.FC = (): ReactElement => {
   const [inputPassword, setInputPassword] = useState<string>("");
   const [inputFirstName, setInputFirstName] = useState<string>("");
   const [inputLastName, setInputLastName] = useState<string>("");
+  const navigate = useNavigate()
 
   /**
    * @description The handler for a new User submitting their signup request
@@ -44,7 +45,9 @@ const SignupPage: React.FC = (): ReactElement => {
         displayName: resp.data.display_name,
         firstName: resp.data.first_name,
         lastName: resp.data.last_name,
-      });
+        profilePicture: resp.data.profile_picture_url
+      })
+      navigate('/');
     } catch (error) {
       console.log("Signup failed: ", error);
     }
@@ -79,7 +82,7 @@ const SignupPage: React.FC = (): ReactElement => {
                 Sign Up
               </h1>
               <p className="md:text-md">
-                
+
               </p>
             </div>
             <form

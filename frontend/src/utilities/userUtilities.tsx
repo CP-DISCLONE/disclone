@@ -22,6 +22,7 @@ export const userConfirmation = async (): Promise<User | null> => {
         displayName: response.data.display_name,
         firstName: response.data.first_name,
         lastName: response.data.last_name,
+        profilePicture: response.data.profile_picture_url
       };
     } else {
       console.log("error userConfirmation", response);

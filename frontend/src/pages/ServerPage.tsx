@@ -74,6 +74,7 @@ const ServerPage: React.FC = (): ReactElement => {
         );
         console.log("getting server/channels");
         console.log(resp.data)
+
         const newUsersArr: User[] = []
         for (const user of resp.data.users) {
           const userData = {
@@ -86,6 +87,7 @@ const ServerPage: React.FC = (): ReactElement => {
           console.log(user)
           newUsersArr.push(userData)
         }
+
         const newAdmin: User = {
           email: resp.data.admin.email,
           displayName: resp.data.admin.display_name,
