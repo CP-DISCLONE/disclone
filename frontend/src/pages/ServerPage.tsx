@@ -80,15 +80,18 @@ const ServerPage: React.FC = (): ReactElement => {
             email: user.email,
             displayName: user.display_name,
             firstName: user.first_name,
-            lastName: user.last_name
+            lastName: user.last_name,
+            profilePicture: user.profile_picture_url
           }
+          console.log(user)
           newUsersArr.push(userData)
         }
         const newAdmin: User = {
           email: resp.data.admin.email,
           displayName: resp.data.admin.display_name,
           firstName: resp.data.admin.first_name,
-          lastName: resp.data.admin.last_name
+          lastName: resp.data.admin.last_name,
+          profilePicture: resp.data.profile_picture_url
         }
         setServerUsers(newUsersArr)
         console.log(newUsersArr)
