@@ -1,0 +1,52 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+    container_name: nginx
+    ports:
+      - '80:80'
+  
+  db:
+    image: postgres:14-alpine
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=disclone_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+  
+  gunicorn:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.gunicorn
+    container_name: gunicorn
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=disclone_db
+      - DEBUG=False
+    depends_on:
+      - db
+      - redis
+    
+  daphne:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.daphne
+    container_name: daphne
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=disclone_db
+      - DEBUG=False
+    depends_on:
+      - db
+      - redis
+  
+  redis:
+    image: redis:alpine
+
+volumes:
+  postgres_data:
