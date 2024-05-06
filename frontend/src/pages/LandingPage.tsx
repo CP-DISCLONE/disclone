@@ -39,6 +39,7 @@ const LandingPage: React.FC = (): ReactElement => {
         displayName: resp.data.display_name,
         firstName: resp.data.first_name,
         lastName: resp.data.last_name,
+        profilePicture: resp.data.profile_picture_url
       });
     } catch (error) {
       console.log("Login failed: ", error);
@@ -67,15 +68,15 @@ const LandingPage: React.FC = (): ReactElement => {
               </div>
             </div>
             <div className="container max-w-sm">
-              
-           
-            
+
+
+
               <div className="container max-w-sm">
                 <div className="mb-6 text-center md:mb-8">
                   <h1 className="mb-5 text-5xl font-bold md:mb-6 md:text-7xl lg:text-8xl">
                     Log In
                   </h1>
-               
+
                 </div>
                 <form
                   onSubmit={(e) => {

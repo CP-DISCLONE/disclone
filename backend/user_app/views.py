@@ -16,6 +16,8 @@ from django.contrib.auth import authenticate, login, logout
 from .models import User
 import base64
 from django.core.files.base import ContentFile
+from PIL import Image
+from io import BytesIO
 
 
 class TokenReq(APIView):
@@ -76,9 +78,23 @@ class Info (TokenReq):
             profile_picture = data["profile_picture"]
             # Decode base64 string to binary image data
             binary_data = base64.b64decode(profile_picture)
-            # Create a ContentFile object from the binary data
+
+            with Image.open(BytesIO(binary_data)) as img:
+                # Convert the image to RGB mode
+                img = img.convert('RGB')
+
+                # Resize the image
+                new_width = 67  # Set your desired width
+                new_height = 67  # Set your desired height
+                resized_img = img.resize((new_width, new_height))
+
+                # Convert the resized image back to binary data
+                output_buffer = BytesIO()
+                resized_img.save(output_buffer, format='JPEG')
+                resized_binary_data = output_buffer.getvalue()
+
             profile_picture = ContentFile(
-                binary_data, name="profile_picture.jpg")
+                resized_binary_data, name="profile_picture.jpg")
             user.profile_picture.save("profile_picture.jpg", profile_picture)
 
         try:
