@@ -87,7 +87,8 @@ class Info (TokenReq):
                 "email": request.user.email,
                 "display_name": request.user.display_name,
                 "first_name": request.user.first_name,
-                "last_name": request.user.last_name
+                "last_name": request.user.last_name,
+                "profile_picture": user.profile_picture
             }
             return Response(user_data, status=HTTP_200_OK)
         except ValidationError as e:
