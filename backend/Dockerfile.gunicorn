@@ -10,4 +10,15 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . /disclone/backend/
 
+# Create a directory for media files
+RUN mkdir -p /disclone/backend/media
+
+# Set permissions for media directory
+RUN chown -R :1000 /disclone/backend/media
+
+# Ensure the directory has the correct permissions
+RUN chmod -R 775 /disclone/backend/media
+
+VOLUME ["/disclone/backend/media"]
+
 CMD ["gunicorn", "disclone_proj.wsgi:application", "--bind", "0.0.0.0:8001", "--workers", "4"]

@@ -1,5 +1,5 @@
 import { useOutletContext } from "react-router-dom";
-import { useState, FormEvent, ReactElement } from "react";
+import { useState, FormEvent, ReactElement, ChangeEvent, useEffect } from "react";
 import { AxiosResponse } from "axios";
 import { api } from "../utilities/axiosInstance";
 import { ContextType } from "../types/contextTypes";
@@ -13,6 +13,7 @@ import { ContextType } from "../types/contextTypes";
 const AccountInfo: React.FC = (): ReactElement => {
   const { currentUser, setCurrentUser } = useOutletContext<ContextType>();
   const [inputDisplayName, setInputDisplayName] = useState<string>("");
+  const [inputImage, setInputImage] = useState<string>('');
 
   /**
    * @description The handler for a User's display name update submission. Upon
@@ -26,18 +27,42 @@ const AccountInfo: React.FC = (): ReactElement => {
     try {
       const resp: AxiosResponse = await api.put("users/info/", {
         display_name: inputDisplayName,
+        profile_picture: inputImage
       });
       console.log("Successfully updated display name.");
       setCurrentUser({
         email: resp.data.email,
-        displayName: inputDisplayName,
+        displayName: resp.data.display_name,
         firstName: resp.data.first_name,
         lastName: resp.data.last_name,
+        profilePicture: resp.data.profile_picture
       });
     } catch (error) {
       console.log("Failed to update display name: ", error);
     }
   };
+
+  const handleUpload = (e: ChangeEvent<HTMLInputElement>): void => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+
+      reader.onloadend = () => {
+        // Convert the file to a base64 string
+        if (typeof reader.result === 'string') {
+          const base64String = reader.result.split(',')[1];
+          // Set the inputImage state to the base64 string
+          setInputImage(base64String);
+        }
+      };
+
+      reader.readAsDataURL(file);
+    }
+  };
+
+  useEffect(() => {
+    console.log(inputImage)
+  }, [inputImage])
 
   return (
     <header className="px-[5%] py-16 md:py-24 lg:py-28">
@@ -86,6 +111,12 @@ const AccountInfo: React.FC = (): ReactElement => {
                 className="ml-2 p-1 rounded border-2 bg-black text-white border-black hover:bg-white hover:text-black"
               />
             </div>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => handleUpload(e)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+            />
           </form>
         </div>
       </div>

@@ -10,7 +10,7 @@ services:
       - POSTGRES_DB=disclone_db
     volumes:
       - postgres_data:/var/lib/postgresql/data/
-  
+
   frontend:
     build:
       context: ./frontend
@@ -24,7 +24,7 @@ services:
     depends_on:
       - gunicorn
       - daphne
-  
+
   gunicorn:
     build:
       context: ./backend
@@ -39,9 +39,12 @@ services:
       - '8001:8001'
     volumes:
       - ./backend:/disclone/backend
+      - media_volume:/disclone/backend/media # Include the media volume here
     depends_on:
       - db
       - redis
+    command: >
+      bash -c " python manage.py makemigrations && python manage.py migrate && gunicorn disclone_proj.wsgi:application --bind 0.0.0.0:8001 --workers 4 "
 
   daphne:
     build:
@@ -60,12 +63,14 @@ services:
     depends_on:
       - db
       - redis
-  
+    command: >
+      bash -c " python manage.py makemigrations && python manage.py migrate && daphne -b 0.0.0.0 -p 8000 disclone_proj.asgi:application "
+
   redis:
     image: redis:latest
     ports:
       - '6379:6379'
 
-
 volumes:
   postgres_data:
+  media_volume: # Define the media_volume here

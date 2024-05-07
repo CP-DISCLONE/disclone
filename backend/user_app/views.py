@@ -14,6 +14,10 @@ from rest_framework.permissions import IsAuthenticated
 from django.core.exceptions import ValidationError
 from django.contrib.auth import authenticate, login, logout
 from .models import User
+import base64
+from django.core.files.base import ContentFile
+from PIL import Image
+from io import BytesIO
 
 
 class TokenReq(APIView):
@@ -46,9 +50,9 @@ class Info (TokenReq):
         Returns:
             Response: The rest_framework HTTP response with data and proper status code.
         """
-
+        profile_picture_url = request.user.profile_picture.url if request.user.profile_picture else None
         data = {"email": request.user.email, "display_name": request.user.display_name,
-                "first_name": request.user.first_name, "last_name": request.user.last_name}
+                "first_name": request.user.first_name, "last_name": request.user.last_name, "profile_picture": profile_picture_url}
         return Response(data, status=HTTP_200_OK)
 
     def put(self, request: HttpRequest) -> Response:
@@ -63,13 +67,46 @@ class Info (TokenReq):
 
         data = request.data.copy()
         user = User.objects.get(username=request.user.email)
-        if data.get("display_name") and "display_name" in data:
-            user.display_name = data.get("display_name")
+
+        # Check if display_name is provided and not empty
+        if "display_name" in data and data["display_name"]:
+            # Update display name
+            user.display_name = data["display_name"]
+
+        # Update profile picture if provided
+        if "profile_picture" in data:
+            profile_picture = data["profile_picture"]
+            # Decode base64 string to binary image data
+            binary_data = base64.b64decode(profile_picture)
+
+            with Image.open(BytesIO(binary_data)) as img:
+                # Convert the image to RGB mode
+                img = img.convert('RGB')
+
+                # Resize the image
+                new_width = 67  # Set your desired width
+                new_height = 67  # Set your desired height
+                resized_img = img.resize((new_width, new_height))
+
+                # Convert the resized image back to binary data
+                output_buffer = BytesIO()
+                resized_img.save(output_buffer, format='JPEG')
+                resized_binary_data = output_buffer.getvalue()
+
+            profile_picture = ContentFile(
+                resized_binary_data, name="profile_picture.jpg")
+            user.profile_picture.save("profile_picture.jpg", profile_picture)
+
         try:
             user.full_clean()
             user.save()
-            user_data = {"email": request.user.email, "display_name": request.user.display_name,
-                         "first_name": request.user.first_name, "last_name": request.user.last_name}
+            user_data = {
+                "email": request.user.email,
+                "display_name": user.display_name,  # Return updated or original display_name
+                "first_name": request.user.first_name,
+                "last_name": request.user.last_name,
+                "profile_picture_url": user.profile_picture.url
+            }
             return Response(user_data, status=HTTP_200_OK)
         except ValidationError as e:
             return Response(e.message_dict, status=HTTP_400_BAD_REQUEST)
