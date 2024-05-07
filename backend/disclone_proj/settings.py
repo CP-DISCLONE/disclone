@@ -33,7 +33,8 @@ ALLOWED_HOSTS = [
     "gunicorn",
     "daphne",
     "0.0.0.0",
-    "localhost"
+    "localhost",
+    "disclone.duckdns.org"
 ]
 
 
