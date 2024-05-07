@@ -44,7 +44,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ channel, serverUsers }: ChatRoomPro
    * open and closed each time the component re-renders
    */
   const client: W3CWebSocket = useMemo(
-    (): W3CWebSocket => new W3CWebSocket(`ws://18.222.254.79:8000/ws/chat/${room}/`),
+    (): W3CWebSocket => new W3CWebSocket(`ws://ec2-18-222-254-79.us-east-2.compute.amazonaws.com/ws/chat/${room}/`),
     [room]
   );
 
