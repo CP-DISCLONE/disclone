@@ -27,9 +27,13 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=disclone_db
       - DEBUG=False
+    volumes:
+      - media_volume:/disclone/backend/media # Include the media volume here
     depends_on:
       - db
       - redis
+    command: >
+      bash -c "python manage.py makemigrations && python manage.py migrate && gunicorn disclone_proj.wsgi:application --bind 0.0.0.0:8001 --workers 4"
     
   daphne:
     build:
@@ -44,9 +48,12 @@ services:
     depends_on:
       - db
       - redis
+    command: >
+      bash -c "daphne -b 0.0.0.0 -p 8000 disclone_proj.asgi:application"
   
   redis:
     image: redis:alpine
 
 volumes:
   postgres_data:
+  media_volume: # Define the media_volume here
