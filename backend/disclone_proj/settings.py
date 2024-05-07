@@ -29,7 +29,7 @@ SECRET_KEY = env.get("DJANGO_SECRET_KEY", "top-secret-key")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["0.0.0.0"]
 
 
 # Application definition
@@ -50,12 +50,10 @@ INSTALLED_APPS = [
     'server_app'
 ]
 
-# CORS_ALLOWED_ORIGINS = [
-#     "http://localhost:5173",
-#     "http://localhost:5174"
-# ]
-
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "http://disclone.duckdns.org"
+]
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',

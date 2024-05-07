@@ -1,4 +1,11 @@
-import { useState, useEffect, useMemo, FormEvent, ReactElement, useRef } from "react";
+import {
+  useState,
+  useEffect,
+  useMemo,
+  FormEvent,
+  ReactElement,
+  useRef,
+} from "react";
 import ChatMessage from "../components/ChatMessage";
 import { w3cwebsocket as W3CWebSocket, IMessageEvent } from "websocket";
 import { Message } from "../types/chatElementTypes";
@@ -23,18 +30,20 @@ interface ChatRoomProps {
 /**
  * @description The ChatRoom page that renders the current Channel's messages
  * and a form for users to submit new messages
- * 
+ *
  * @param {ChatRoomProps} channel The current Channel being rendered
- * 
+ *
  * @returns {ReactElement} The ChatRoom page
  */
-const ChatRoom: React.FC<ChatRoomProps> = ({ channel, serverUsers }: ChatRoomProps): ReactElement => {
+const ChatRoom: React.FC<ChatRoomProps> = ({
+  channel,
+  serverUsers,
+}: ChatRoomProps): ReactElement => {
   const { currentUser } = useOutletContext<ContextType>();
   const [inputMsg, setInputMsg] = useState<string>("");
   const [chatLog, setChatLog] = useState<Message[]>([]);
   const { server_id } = useParams();
   const messagesEndRef = useRef<HTMLDivElement>(null);
-
 
   const room: string = `servers${server_id}channels${channel.id}`; // Update later to use the channel's name grabbed from request to WSGI
 
@@ -44,7 +53,8 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ channel, serverUsers }: ChatRoomPro
    * open and closed each time the component re-renders
    */
   const client: W3CWebSocket = useMemo(
-    (): W3CWebSocket => new W3CWebSocket(`ws://ec2-18-222-254-79.us-east-2.compute.amazonaws.com/ws/chat/${room}/`),
+    (): W3CWebSocket =>
+      new W3CWebSocket(`ws://disclone.duckdns.org/ws/chat/${room}/`),
     [room]
   );
 
@@ -62,11 +72,8 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ channel, serverUsers }: ChatRoomPro
     };
 
     client.onclose = (): void => {
-
       console.log("WebSocket Client Disconnected");
-
-
-    }
+    };
 
     // accepts broadcast and updates messages on page
     client.onmessage = (message: IMessageEvent): void => {
@@ -84,8 +91,6 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ channel, serverUsers }: ChatRoomPro
       client.close(); // Close WebSocket connection
     };
   }, [client]);
-
-
 
   useEffect((): void => {
     console.log("Getting messages");
@@ -109,7 +114,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ channel, serverUsers }: ChatRoomPro
    * retrieval. The message is also posted to the WebSocket, where the asynchronous portion
    * of the backend receives the message in the channel and sends it to all other clients
    * that are connected to the channel
-   * 
+   *
    * @param {FormEvent} e The submission FormEvent
    */
   const handleSend = async (e: FormEvent): Promise<void> => {
@@ -142,10 +147,13 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ channel, serverUsers }: ChatRoomPro
         <div className="justify-center">
           <h1 className=" text-xl">Selected Channel: {channel.name}</h1>
           <div className="grid grid-cols-7 gap-1  h-[650px] justify-center">
-
             <div className="col-span-2 p-4 m-2 gap-4 flex flex-col text-md text-gray-400 rounded-md bg-primary-dark">
               Users:
-              {serverUsers ? serverUsers.map((user, idx) => <UserCard key={idx} user={user} />) : null}
+              {serverUsers
+                ? serverUsers.map((user, idx) => (
+                    <UserCard key={idx} user={user} />
+                  ))
+                : null}
             </div>
             <div className="col-span-5 m-2 flex flex-col">
               {/* Chat messages */}
@@ -166,9 +174,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ channel, serverUsers }: ChatRoomPro
                 }}
                 className="flex gap-2 py-4"
               >
-                <Button className="bg-primary-dark">
-                  Send
-                </Button>
+                <Button className="bg-primary-dark">Send</Button>
                 <input
                   type="text"
                   value={inputMsg}
