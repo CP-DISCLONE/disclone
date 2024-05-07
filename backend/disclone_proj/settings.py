@@ -29,7 +29,10 @@ SECRET_KEY = env.get("DJANGO_SECRET_KEY", "top-secret-key")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["0.0.0.0"]
+ALLOWED_HOSTS = [
+    "http://gunicorn",
+    "http://daphne"
+]
 
 
 # Application definition
