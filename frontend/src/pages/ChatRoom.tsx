@@ -6,7 +6,6 @@ import { ContextType } from "../types/contextTypes";
 import { useOutletContext, useParams } from "react-router-dom";
 import { api } from "../utilities/axiosInstance";
 import { AxiosResponse } from "axios";
-import { format, toZonedTime } from "date-fns-tz";
 import { Channel } from "../types/channelElementTypes";
 import { Button } from "@/components/ui/button";
 import { User } from "@/types/userTypes";
@@ -124,20 +123,14 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ channel, serverUsers }: ChatRoomPro
     } catch (error) {
       console.log(error);
     }
-    const currentUtcDate = new Date();
-    const utcDateInSpecificTimezone = toZonedTime(currentUtcDate, "Etc/UTC");
-
-    const datetime: string = format(
-      utcDateInSpecificTimezone,
-      "HH:mm - MMMM dd, yyyy"
-    );
+    const currentUtcDate: Date = new Date();
 
     client.send(
       JSON.stringify({
         type: "message",
         text: inputMsg,
         sender: currentUser?.displayName,
-        datetime: datetime,
+        datetime: currentUtcDate,
       })
     );
     setInputMsg("");
