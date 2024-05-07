@@ -6,6 +6,8 @@ services:
     container_name: nginx
     ports:
       - '80:80'
+    networks:
+      - default
   
   db:
     image: postgres:14-alpine
@@ -16,6 +18,8 @@ services:
       - POSTGRES_DB=disclone_db
     volumes:
       - postgres_data:/var/lib/postgresql/data/
+    networks:
+      - backend
   
   gunicorn:
     build:
@@ -32,6 +36,9 @@ services:
     depends_on:
       - db
       - redis
+    networks:
+      - default
+      - backend
     command: >
       bash -c "python manage.py makemigrations && python manage.py migrate && gunicorn disclone_proj.wsgi:application --bind 0.0.0.0:8001 --workers 4"
     
@@ -48,12 +55,21 @@ services:
     depends_on:
       - db
       - redis
+    networks:
+      - default
+      - backend
     command: >
       bash -c "daphne -b 0.0.0.0 -p 8000 disclone_proj.asgi:application"
   
   redis:
     image: redis:alpine
+    networks:
+      - backend
 
 volumes:
   postgres_data:
   media_volume: # Define the media_volume here
+
+networks:
+  backend:
+  default:
