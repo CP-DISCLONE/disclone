@@ -30,8 +30,10 @@ SECRET_KEY = env.get("DJANGO_SECRET_KEY", "top-secret-key")
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    "http://gunicorn",
-    "http://daphne"
+    "gunicorn",
+    "daphne",
+    "0.0.0.0",
+    "localhost"
 ]
 
 
