@@ -19,6 +19,8 @@ The code is designed to follow the DRY principle. Utility functions live within 
 
 ### Software Design
 
+<img src="./Disclone-2.jpg" height="150px"/>
+
 The back-end utilizes multiple services to serve both the asynchronous and synchronous functions of the server.
 
 Django and Django Rest Framework are used to manage the project and handle model creation, serializers, class-based views, and user authentication.
