@@ -1,0 +1,80 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+    container_name: nginx
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - /tmp/acme_challenge:/tmp/acme_challenge
+    networks:
+      - default
+    restart: always
+  
+  db:
+    image: postgres:14-alpine
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=disclone_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    networks:
+      - backend
+  
+  gunicorn:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.gunicorn
+    container_name: gunicorn
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=disclone_db
+      - DEBUG=False
+    volumes:
+      - media_volume:/disclone/backend/media
+    depends_on:
+      - db
+      - redis
+    networks:
+      - default
+      - backend
+    command: >
+      bash -c "python manage.py makemigrations && python manage.py migrate && gunicorn disclone_proj.wsgi:application --bind 0.0.0.0:8001 --workers 4"
+    
+  daphne:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.daphne
+    container_name: daphne
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=disclone_db
+      - DEBUG=False
+    depends_on:
+      - db
+      - redis
+    networks:
+      - default
+      - backend
+    command: >
+      bash -c "daphne -b 0.0.0.0 -p 8000 disclone_proj.asgi:application"
+  
+  redis:
+    image: redis:alpine
+    networks:
+      - backend
+
+volumes:
+  postgres_data:
+  media_volume:
+
+networks:
+  backend:
+  default:

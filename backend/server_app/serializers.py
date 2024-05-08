@@ -12,7 +12,6 @@ class GetMessageSerializer(ModelSerializer):
     """
 
     sender = SerializerMethodField()
-    datetime = DateTimeField(format="%H:%M - %B %d, %Y ")
 
     class Meta:
         # Meta class that provides the model and fields to be serialized.

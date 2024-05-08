@@ -14,7 +14,7 @@ services:
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     container_name: React
     ports:
       - '5173:5173'
@@ -44,7 +44,7 @@ services:
       - db
       - redis
     command: >
-      bash -c " python manage.py makemigrations && python manage.py migrate && gunicorn disclone_proj.wsgi:application --bind 0.0.0.0:8001 --workers 4 "
+      bash -c "python manage.py makemigrations && python manage.py migrate && gunicorn disclone_proj.wsgi:application --bind 0.0.0.0:8001 --workers 4 "
 
   daphne:
     build:
@@ -64,7 +64,7 @@ services:
       - db
       - redis
     command: >
-      bash -c " python manage.py makemigrations && python manage.py migrate && daphne -b 0.0.0.0 -p 8000 disclone_proj.asgi:application "
+      bash -c "daphne -b 0.0.0.0 -p 8000 disclone_proj.asgi:application "
 
   redis:
     image: redis:latest
