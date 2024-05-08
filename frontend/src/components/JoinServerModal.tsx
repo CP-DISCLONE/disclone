@@ -37,7 +37,7 @@ const JoinServerModal: React.FC<JoinServerModalProps> = ({
 }: JoinServerModalProps): ReactElement => {
     return (
         <Dialog>
-            <DialogTrigger>Join Server (+)</DialogTrigger>
+            <DialogTrigger className='hover:bg-accent-dark m-1 hover:text-primary-dark rounded p-1'>Join Server (+)</DialogTrigger>
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Join Server</DialogTitle>
@@ -47,7 +47,7 @@ const JoinServerModal: React.FC<JoinServerModalProps> = ({
                                 handleJoinServer(e);
                             }}
                         >
-                            <p>Input Join server name.</p>
+                            <p className='m-1'>Input Join server ID.</p>
                             <input
                                 type="text"
                                 value={joinServerID}
@@ -55,7 +55,7 @@ const JoinServerModal: React.FC<JoinServerModalProps> = ({
                                     setJoinServerID(e.target.value);
                                 }}
                             />
-                            <input type="submit" value="Add Server" />
+                            <input className='hover:bg-accent-dark m-1 hover:text-primary-dark rounded p-1' type="submit" value="Add Server" />
                         </form>
                     </DialogDescription>
                 </DialogHeader>

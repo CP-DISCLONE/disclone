@@ -67,7 +67,7 @@ const AccountInfo: React.FC = (): ReactElement => {
   return (
     <header className="px-[5%] py-16 md:py-24 lg:py-28">
       <div className="container">
-        <div className="mx-auto mb-12 w-full text-center md:mb-18 lg:mb-20">
+        <div className="flex flex-col items-center justify-center mx-auto mb-12 w-full text-center md:mb-18 lg:mb-20">
           <h2 className="mb-5 text-5xl font-bold md:mb-6 md:text-7xl lg:text-8xl">
             Account Info
           </h2>
@@ -87,7 +87,7 @@ const AccountInfo: React.FC = (): ReactElement => {
             onSubmit={(e) => {
               handleSubmitInfo(e);
             }}
-            className="grid grid-cols-1 gap-6"
+            className="grid grid-cols-1 gap-6 w-1/3"
           >
             <div className="flex w-full items-center justify-center">
               <label
@@ -98,24 +98,25 @@ const AccountInfo: React.FC = (): ReactElement => {
               </label>
               <input
                 type="text"
-                className="flex size-1/4 min-h-7 ml-2 border-2 border-black bg-background-primary px-3 py-2 align-middle file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-neutral focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex size-1/2 min-h-7 ml-2 border-2 border-black bg-background-primary px-3 py-2 align-middle file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-neutral focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                 id="email"
                 value={inputDisplayName}
                 onChange={(e) => {
                   setInputDisplayName(e.target.value);
                 }}
               />
-              <input
-                type="submit"
-                value="Update"
-                className="ml-2 p-1 rounded border-2 bg-black text-white border-black hover:bg-white hover:text-black"
-              />
+
             </div>
             <input
               type="file"
               accept="image/*"
               onChange={(e) => handleUpload(e)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none "
+            />
+            <input
+              type="submit"
+              value="Update"
+              className="ml-2 p-1 rounded border-2 bg-foreground hover:bg-accent-dark text-white border-black hover:text-black"
             />
           </form>
         </div>
