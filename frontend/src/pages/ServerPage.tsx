@@ -113,8 +113,10 @@ const ServerPage: React.FC = (): ReactElement => {
 
 
         <div className="flex p-4 my-4 gap-4 items-center rounded-md bg-primary-dark">
+          <div className="bg-slate-300 text-primary-dark p-3 rounded-md">
           <p>Server ID: {server_id}</p>
           {admin ? <p>Server Admin: {admin.displayName}</p> : null}
+          </div>
           <h1>Your Channels : </h1>
 
           <div className="flex">
@@ -138,7 +140,7 @@ const ServerPage: React.FC = (): ReactElement => {
                 </li>
               ))
               : null}
-            <li className="flex p-4 bg-foreground text-primary-dark rounded-md justify-center items-center"><LeaveServerModal myServers={myServers} setMyServers={setMyServers} server_id={server_id} /></li>
+            <li className="flex p-4 bg-foreground text-primary-dark rounded-md justify-center items-center transform hover:scale-110"><LeaveServerModal myServers={myServers} setMyServers={setMyServers} server_id={server_id} /></li>
           </ul>
         </div>
 
