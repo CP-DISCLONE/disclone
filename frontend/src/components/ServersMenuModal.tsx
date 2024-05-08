@@ -53,7 +53,7 @@ const ServersMenuModal: React.FC<ServersMenuModalProps> = ({
                     <DialogTitle>Select Option</DialogTitle>
                     <DialogDescription>
 
-                        <ul>
+                        <ul className='flex items-center justify-center gap-4' >
                             <li> <NewServerModal
                                 handleAddServer={handleAddServer}
                                 newServerName={newServerName}

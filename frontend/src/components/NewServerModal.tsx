@@ -37,7 +37,7 @@ const NewServerModal: React.FC<NewServerModalProps> = ({
 }: NewServerModalProps): ReactElement => {
     return (
         <Dialog>
-            <DialogTrigger>Add Server (+)</DialogTrigger>
+            <DialogTrigger className='hover:bg-accent-dark m-1 hover:text-primary-dark rounded p-1'>Add Server (+)</DialogTrigger>
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Add Server</DialogTitle>
@@ -47,7 +47,7 @@ const NewServerModal: React.FC<NewServerModalProps> = ({
                                 handleAddServer(e);
                             }}
                         >
-                            <p>Input new server name.</p>
+                            <p className='m-1'>Input new server name.</p>
                             <input
                                 type="text"
                                 value={newServerName}
@@ -57,7 +57,7 @@ const NewServerModal: React.FC<NewServerModalProps> = ({
                                 }}
                                 required
                             />
-                            <input type="submit" value="Add Server" />
+                            <input className='hover:bg-accent-dark m-1 hover:text-primary-dark rounded p-1' type="submit" value="Add Server" />
                         </form>
                     </DialogDescription>
                 </DialogHeader>
