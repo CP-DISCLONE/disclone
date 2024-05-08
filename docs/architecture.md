@@ -9,6 +9,8 @@ This application is constructed with the following stack:
 
 ## Front-End
 
+<img src="./Disclone-4.jpg" width="850px"/>
+
 ### Software Design
 
 The code is designed to follow the DRY principle. Utility functions live within their own directory and are used around the application where needed. Custom types and interfaces live in their own directory as well, enabling use across all pages and components effeciently.
@@ -17,7 +19,11 @@ The code is designed to follow the DRY principle. Utility functions live within 
 
 ## Back-End
 
+<img src="./Disclone-3.jpg" width="600px"/>
+
 ### Software Design
+
+<img src="./Disclone-2.jpg" width="750px"/>
 
 The back-end utilizes multiple services to serve both the asynchronous and synchronous functions of the server.
 
@@ -34,6 +40,8 @@ Redis is used as both a caching layer for the application and the main channel l
 
 Channels/Django Channels is used to serve the WebSocket and create consumers.
 - By using Channels paired with Daphne, the ASGI (asynchronous) portion of our application is utilized to open channel layers and allow consumers to handle all asynchronous requests from the front-end.
+
+<img src="./Disclone-1.jpg" width="600px"/>
 
 Celery is used as a worker service and depends on Redis to handle shared tasks across the application.
 - By bringing Celery into the application, we are able to designate shared tasks across the back-end and have Celery workers handle them asynchronously without an immediate response required.
