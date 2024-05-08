@@ -57,7 +57,7 @@ const LeaveServerModal: React.FC<LeaveServerModalProps> = ({
     return (
         <div className="flex items-center justify-center">
         <Dialog >
-            <DialogTrigger >Leave Server (-)</DialogTrigger>
+            <DialogTrigger >Leave Channel (-)</DialogTrigger>
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Leave Server</DialogTitle>

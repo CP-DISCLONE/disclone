@@ -124,7 +124,7 @@ const NavBar: React.FC<ContextType> = ({
             /></li>
             {/* {myServers ? myServers.map((server, idx) => <li key={idx}><ServerButton server={server} /></li>) : null} */}
             {myServers ? myServers.map((server, idx) => (
-              <li key={idx} className={server.id === Number(server_id) ? 'bg-accent-dark' : ''}>
+              <li key={idx} className={server.id === Number(server_id) ? 'bg-accent-dark border rounded-md transform hover:scale-110' : 'bg-slate-300 border rounded-md transform hover:scale-110'}>
                 <ServerButton server={server} />
               </li>
             )) : null}
