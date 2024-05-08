@@ -9,7 +9,7 @@ This application is constructed with the following stack:
 
 ## Front-End
 
-<img src="./Disclone-4.jpg" width="600px"/>
+<img src="./Disclone-4.jpg" width="850px"/>
 
 ### Software Design
 
@@ -23,7 +23,7 @@ The code is designed to follow the DRY principle. Utility functions live within 
 
 ### Software Design
 
-<img src="./Disclone-2.jpg" width="600px"/>
+<img src="./Disclone-2.jpg" width="750px"/>
 
 The back-end utilizes multiple services to serve both the asynchronous and synchronous functions of the server.
 
