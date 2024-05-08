@@ -1,8 +1,5 @@
 #!/bin/bash
 # This script will install all required dependencies for the application
-# After cloning the repo, ensure the script is executable by running 
-# 'chmod +x ./install.sh' from the command line
-# Run the script with '.install.sh'
 
 # Ensure that the whole script runs or dump script if error
 set -eu -o pipefail
