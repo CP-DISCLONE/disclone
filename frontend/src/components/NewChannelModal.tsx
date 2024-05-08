@@ -38,7 +38,7 @@ const NewChannelModal: React.FC<NewChannelModalProps> = ({
   return (
     <Dialog>
       <DialogTrigger className="justify-center p-4 rounded-md bg-popover-dark transform hover:scale-110">
-      <img src={addcircleImage} alt="Add circle" />
+        <img src={addcircleImage} alt="Add circle" />
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -48,7 +48,7 @@ const NewChannelModal: React.FC<NewChannelModalProps> = ({
               onSubmit={(e) => {
                 handleAddChannel(e);
               }}
-            > <p>Input new channel name.</p>
+            > <p className='m-1'>Input new channel name.</p>
               <input
                 type="text"
                 value={newChannelName}
@@ -56,7 +56,7 @@ const NewChannelModal: React.FC<NewChannelModalProps> = ({
                   setNewChannelName(e.target.value);
                 }}
               />
-              <input type="submit" value="Add Channel" />
+              <input className='hover:bg-accent-dark m-1 hover:text-primary-dark rounded p-1' type="submit" value="Add Channel" />
             </form>
           </DialogDescription>
         </DialogHeader>
