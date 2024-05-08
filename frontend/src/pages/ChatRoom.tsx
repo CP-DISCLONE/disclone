@@ -54,7 +54,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({
    */
   const client: W3CWebSocket = useMemo(
     (): W3CWebSocket =>
-      new W3CWebSocket(`ws://disclone.duckdns.org/ws/chat/${room}/`),
+      new W3CWebSocket(`wss://disclone.duckdns.org/ws/chat/${room}/`),
     [room]
   );
 
