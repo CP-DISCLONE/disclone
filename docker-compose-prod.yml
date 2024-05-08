@@ -32,7 +32,7 @@ services:
       - POSTGRES_DB=disclone_db
       - DEBUG=False
     volumes:
-      - media_volume:/disclone/backend/media # Include the media volume here
+      - media_volume:/disclone/backend/media
     depends_on:
       - db
       - redis
@@ -68,7 +68,7 @@ services:
 
 volumes:
   postgres_data:
-  media_volume: # Define the media_volume here
+  media_volume:
 
 networks:
   backend:
