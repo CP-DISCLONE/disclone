@@ -37,7 +37,7 @@ const NewServerModal: React.FC<NewServerModalProps> = ({
 }: NewServerModalProps): ReactElement => {
     return (
         <Dialog>
-            <DialogTrigger className='hover:bg-accent-dark m-1 hover:text-primary-dark rounded p-1'>Add Server (+)</DialogTrigger>
+            <DialogTrigger>Add Server (+)</DialogTrigger>
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Add Server</DialogTitle>
