@@ -56,18 +56,18 @@ const LeaveServerModal: React.FC<LeaveServerModalProps> = ({
     }
     return (
         <div className="flex items-center justify-center">
-        <Dialog >
-            <DialogTrigger >Leave Channel (-)</DialogTrigger>
-            <DialogContent>
-                <DialogHeader>
-                    <DialogTitle>Leave Server</DialogTitle>
-                    <DialogDescription>
-                        <p>Are you sure you wish to leave the server?</p>
-                        <Button onClick={() => handleLeaveServer(server_id)}>Yes, Leave Server</Button>
-                    </DialogDescription>
-                </DialogHeader>
-            </DialogContent>
-        </Dialog>
+            <Dialog >
+                <DialogTrigger >Leave Server (-)</DialogTrigger>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Leave Server</DialogTitle>
+                        <DialogDescription>
+                            <p>Are you sure you wish to leave the server?</p>
+                            <Button onClick={() => handleLeaveServer(server_id)}>Yes, Leave Server</Button>
+                        </DialogDescription>
+                    </DialogHeader>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 };
